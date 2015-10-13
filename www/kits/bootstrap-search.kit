@@ -1,0 +1,317 @@
+<!-- $pagetitle: Search Safety Audit Forms -->
+<!-- @import "header.kit" -->
+<!-- @import "bootstrap-menu.kit" -->
+
+	<div class="container theme-showcase">
+		<form action="testing" method="POST" role="form" onsubmit="return false;">
+
+			<div class="row">
+				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<label class='control-label'>AR Number</label>
+					<input class="form-control" type="text" size="50" name="ARNumber">
+
+					<label class='control-label hidden'>AuditorId</label>
+					<input class="form-control hidden" type="text" size="50" name="AuditorId">
+					
+
+					
+					
+					
+
+					
+					<label class='control-label hidden'>AuditeeId</label>
+					<input class="form-control hidden" type="text" size="50" name="AuditeeId">
+					
+
+					
+					<label class='control-label hidden'>AuditeeName</label>
+					<input class="form-control hidden" type="text" size="50" name="AuditeeName">
+
+					<label class='control-label hidden'>ApprovedById</label>
+					<input class="form-control hidden" type="text" size="50" name="ApprovedById">
+					
+
+					
+					<label class='control-label hidden'>ApprovedByName</label>
+					<input class="form-control hidden" type="text" size="50" name="ApprovedByName">
+					
+
+					
+					<label class='control-label hidden'>CreatedById</label>
+					<input class="form-control hidden" type="text" size="50" name="CreatedById">
+					
+
+					
+					<label class='control-label hidden'>CreatedByName</label>
+					<input class="form-control hidden" type="text" size="50" name="CreatedByName">
+					
+
+					
+					<label class='control-label hidden'>SupervisorManagerId</label>
+					<input class="form-control hidden" type="text" size="50" name="SupervisorManagerId">
+					
+
+					
+					<label class='control-label hidden'>SupervisorManagerName</label>
+					<input class="form-control hidden" type="text" size="50" name="SupervisorManagerName">
+
+					<label class='control-label'>Auditor Facility</label>
+					
+					<select name="ReportingDepartmentFacilityId" id="ReportingDepartmentFacilityId" class="form-control" title='Select a facility'>
+						<option value="">Select...</option>
+						<option value="CED">ComEd</option>
+						<option value="PDS">PECO</option>
+						<option value="BSC">BSC</option>
+						<option value="BGE" selected>BGE</option>
+					</select>
+					
+
+					<label class='control-label hidden'>Auditor Department</label>
+					<select class="form-control hidden" id="ReportingDepartmentId" name="ReportingDepartmentId">
+						<option value=""></option>
+					</select>
+					
+					<label class='control-label'>Auditee Facility</label>
+					<select name="ResponsibleDepartmentFacilityId" id="ResponsibleDepartmentFacilityId" class="form-control" title='Select a facility'>
+						<option value="">Select...</option>
+						<option value="CED">ComEd</option>
+						<option value="PDS">PECO</option>
+						<option value="BSC">BSC</option>
+						<option value="BGE">BGE</option>
+					</select>
+
+					<label class='control-label hidden'>Auditee Department</label>
+					<select name="ResponsibleDepartmentId" id="ResponsibleDepartmentId" class="form-control hidden">
+						<option value=""></option>
+					</select>
+
+				</div>
+				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				
+
+					<label class='control-label'>Filter Entry Date from Start Date</label>
+					<input class="form-control" type="date" size="50" name="StartEventDate">
+					
+
+					
+					<label class='control-label'>Filter Entry Date till End Date</label>
+					<input class="form-control" type="date" size="50" name="EndEventDate">
+
+					<label class='control-label'>Auditor Name</label>
+					<input class="form-control" type="text" size="50" name="AuditorName">
+					<span>Enter first or last name, but not both</span>
+
+					<!-- <label class='control-label'>SortField</label> -->
+					<input class="form-control" type="hidden" size="50" name="SortField">
+					
+
+					
+					<!-- <label class='control-label'>SortDirection</label> -->
+					<input class="form-control" type="hidden" size="50" name="SortDirection">
+				</div>
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<button value="Search" id='search' class="btn btn-primary btn-block" style='margin-top:20px' data-loading-text=" <span class='glyphicon glyphicon-refresh fa-spin'></span> Searching...">
+				
+				Search
+			</button>
+		</form>
+
+		<h3 class='section_header'>Results</h3>
+
+		<table class='table table-bordered table-striped' id='search_results'>
+			<thead>
+				<tr>
+					<th>AR ID</th>
+					<th>Category</th>
+					<th>Auditor</th>
+					<th>Auditee Facility &amp; Department</th>
+					<th>Date</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+
+
+	</div> <!-- /container -->
+
+
+
+</article>
+</div>
+</div>
+
+<!-- @import "footer.kit" -->
+
+	<script>
+	var statusCodeToString = {
+			"20" : "In Revision",
+			"25" : "Rejected",
+			"30" : "H/Approved",
+			"35" : "Pre-approved",
+			"38" : "Notify",
+			"40" : "Approved",
+			"85" : "Completed",
+			"86" : "Comp NA",
+			"95" : "Canceled",
+			}
+
+	$(function(){
+		FastClick.attach(document.body);
+
+		// setupFacilityListener("#ReportingDepartmentFacilityId", "#ReportingDepartmentId", undefined);
+		// setupFacilityListener("#ResponsibleDepartmentFacilityId", "#ResponsibleDepartmentId", "#ResponsibleOfficeCode");
+
+
+		var weekago = moment().subtract('days', 7).toDate();
+
+		// Applies the time zone offset. valueAsDate takes in UTC
+		// document.getElementById('EventDate').valueAsDate = weekago - weekago.getTimezoneOffset()*60*1000;
+		$('input[name="StartEventDate"]')[0].valueAsDate = weekago - weekago.getTimezoneOffset()*60*1000;
+
+		function setupFacilityListener(facility_dropdown, department_dropdown, office_dropdown){
+			$(facility_dropdown).change(function(){
+				$(department_dropdown).html("<option disabled>Loading...</option>").addClass('loading');
+				$.ajax({
+					url: services.getSelectedL7Base() + "DepartmentLookup?query",
+					type: 'POST',
+					headers: {
+						// "cache-control": "no-cache",
+						"Authorization" : "Bearer "+localStorage.oauthtoken,
+					},
+					data: JSON.stringify({ "facility": $(this).val() }),
+					contentType: "application/json; charset=utf-8",
+					dataType: 'JSON',
+					success: function(data){
+						$(department_dropdown).html("<option value=''></option>");
+						for(var i = 0; i < data.d.length; i++){
+							$(department_dropdown).append("<option value='" + data.d[i].Value + "'>" + data.d[i].Name + "</option>");
+						}
+						$(department_dropdown).removeClass('loading');
+					},
+					error: function(data){
+						if(data.status == 401){
+							alert('Unauthorized! Your login may have expired. Please logout and log back in.')
+						}
+						else{
+							alert('Service call failed!');
+						}
+						$(department_dropdown).removeClass('loading').html("<option disabled>Loading Failed!</option>");
+					}
+				});
+
+			});
+
+
+		}
+
+		$("#search").click(function(){
+			if(localStorage.oauthtoken == undefined){
+				$('#quickLogin').modal('show');
+				$('#quickLogin #quick_login_reason').text("You will need to login before searching.");
+				return;
+			}
+			var startDate = moment($('input[name="StartEventDate"]').val()).format('YYYYMMDD');
+			if(startDate === "Invalid date")
+				startDate = "";
+
+			var endDate = moment($('input[name="EndEventDate"]').val()).format('YYYYMMDD');
+			if(endDate === "Invalid date")
+				endDate = "";
+
+			var formObject = {
+				"ARNumber" : $('input[name="ARNumber"]').val(),
+				"AuditorId" : $('input[name="AuditorId"]').val(),
+				"AuditorName" : $('input[name="AuditorName"]').val(),
+				"AuditeeId" : $('input[name="AuditeeId"]').val(),
+				"AuditeeName" : $('input[name="AuditeeName"]').val(),
+				"ReportingDepartmentFacilityId" : $('select[name="ReportingDepartmentFacilityId"]').val(),
+				"ReportingDepartmentId" : $('select[name="ReportingDepartmentId"] option:selected').text(),
+				"ResponsibleDepartmentFacilityId" : $('select[name="ResponsibleDepartmentFacilityId"]').val(),
+				"ResponsibleDepartmentId" : $('select[name="ResponsibleDepartmentId"] option:selected').text(),
+				"StartEventDate" : startDate,
+				"EndEventDate" : endDate,
+				"ApprovedById" : $('input[name="ApprovedById"]').val(),
+				"ApprovedByName" : $('input[name="ApprovedByName"]').val(),
+				"CreatedById" : $('input[name="CreatedById"]').val(),
+				"CreatedByName" : $('input[name="CreatedByName"]').val(),
+				"SupervisorManagerId" : $('input[name="SupervisorManagerId"]').val(),
+				"SupervisorManagerName" : $('input[name="SupervisorManagerName"]').val(),
+				"SortField" : $('input[name="SortField"]').val(),
+				"SortDirection" : $('input[name="SortDirection"]').val(),
+				"PageNumber"  : "1",
+				"PageSize"  : "500"
+			}
+
+			$(this).button('loading');
+
+			$.ajax({
+				url: services.getSelectedL7Base() + "SearchAR",
+				type: 'POST',
+				headers: {
+					// "cache-control": "no-cache",
+					"Authorization" : "Bearer "+localStorage.oauthtoken,
+				},
+				data: JSON.stringify(formObject),
+				contentType: "application/json; charset=utf-8",
+				dataType: 'JSON',
+				success: function(data){
+					$("#search_results tbody").html("");
+					if(data.d.SearchRecords != null){
+						$.each(data.d.SearchRecords, function(i, result){
+							// console.log(result);
+							$("<tr>").append("<td><a href='bootstrap-form.html?viewid=" + result.ARID + "'>" + result.ARID + "</a></td>")
+							.append("<td>" + result.category + "</td>")
+							.append("<td>" + result.auditor + "</td>")
+							.append("<td>" + result.auditeeFac + " - " + result.auditeeDep + "</td>")
+							.append("<td>" + moment(result.eventDate, "YYYYMMDD").format("MM/DD/YYYY") + "</td>")
+							.append("<td>" + statusCodeToString[result.status] + "</td>")
+							.appendTo("#search_results tbody");
+						});
+
+						var position = $("#search_results").position();
+
+						$('html, body').animate({scrollTop: position.top-150}, 1000);
+					}
+					else{
+						alert('No search results! Try changing your search parameters.');
+					}
+					// $("#search_results tbody").append()
+					$("#search").button('reset');
+				},
+				error: function(data){
+					if(data.status == 401){
+						alert('Unauthorized! Your login may have expired. Please logout and log back in.')
+					}
+					else{
+						alert('Service call failed!');
+					}
+					$("#search").button('reset');
+				}
+			});
+	});
+
+})
+</script>

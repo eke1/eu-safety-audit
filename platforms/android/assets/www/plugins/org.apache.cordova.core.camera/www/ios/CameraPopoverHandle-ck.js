@@ -1,0 +1,1 @@
+cordova.define("org.apache.cordova.core.camera.CameraPopoverHandle",function(e,t,n){var r=e("cordova/exec"),i=function(){this.setPosition=function(e){var t=[e];r(null,null,"Camera","repositionPopover",t)}};n.exports=i});

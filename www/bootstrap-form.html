@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="shortcut icon" href="../../assets/ico/favicon.png">
+
+	<title>Safety Audit Form</title>
+
+	<link href="bootstrap-3.0.0/css/bootstrap.css" rel="stylesheet">
+	<link href="css/typeahead-bootstraptheme.css" rel="stylesheet">
+	<link href="css/bge-bootstrap.css" rel="stylesheet">
+	<link href="css/animate.css" rel="stylesheet">
+	<script src="bower_components/sprockets-modernizr/modernizr.js"></script>
+	<script src="js/services_config.js"></script>
+	<script src="js/login.js"></script>
+</head>
+<body><nav id="nav" role="navigation">
+    <div class="block">
+        <div class='offline_status'>
+            You are operating in offline mode, please login before submitting
+            
+            <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#quickLogin">
+			  Login
+			</button>
+        </div>
+        <div class='logged_in_as' style='display:none'></div>
+
+        <ul>
+            <li><a href="drafts.html">Drafts <span class="badge" id='drafts_count'></span></a></li>
+            <li><a href="bootstrap-form.html" id="safety_audit_link">New Safety Audit Form</a></li>
+            <li><a href="bootstrap-form.html?type=peertopeer" id="peet_to_peer_link">New Peer to Peer Observation</a></li>
+            
+            <!-- <li><a href="">Management Form</a></li> -->
+            <!-- <li><a href="">Level 1 Report</a></li> -->
+            <li><a href="bootstrap-search.html" id='search_audit_link'>Search Forms</a></li>
+            <!-- <li><a href="bootstrap-photo.html">Photo Upload</a></li> -->
+            <li><a href="index.html" id="logout_link">Logout</a></li>
+        </ul>
+        <a class='settings_link' href="settings.html"><span class='glyphicon glyphicon-cog'></span>Settings &amp; Info</a>
+
+        <a class='settings_link' href="#" id="help_link"><span class='glyphicon glyphicon-exclamation-sign'></span>Help!</a>        
+        <p id="help_text">Please contact the <br>"iPad Safety App" group at <a href="mailto:iPadSafetyApp@exeloncorp.com">iPadSafetyApp@exeloncorp.com</a> <br>for support</p>
+    </div>
+</nav>
+
+<div id='main'>
+    <header id="top" role="banner">
+    <div class="block">
+        <h1>EU Safety Audit App</h1>
+        <div class="nav-btn" id="nav-open-btn">Navigation</div>
+    </div>
+    </header>
+
+    <article id='main-content'>
+<div class='css_loader_formblock'>
+	<h1>Loading Form</h1>
+	<div class='css_loader'>
+	</div>
+</div>
+<div class="block container theme-showcase" id="form_container" style='display:none;'>
+<h1 id="form_type_name">Safety Audit Form</h1>
+<form action="testing" method="POST" role="form" onsubmit="return false;" id='safetyaudit'>
+
+	<ul class="nav nav-tabs" id="form_tabs">
+		<li class='active'><a href="#tab_general" data-toggle="tab">General</a></li>
+		<li><a href="#tab_jobarea" data-toggle="tab">Job Area <span class='visible-md visible-lg'>Safe Zone</span></a></li>
+		<li><a href="#tab_humanperf" data-toggle="tab">Human <span class='visible-sm visible-xs'>Perf.</span><span class='visible-md visible-lg'>Perf. Tools</span></a></li>
+		<li><a href="#tab_workpractices" data-toggle="tab">Work <span class='visible-md visible-lg'>Practices/</span>Skills</a></li>
+		<li><a href="#tab_equipment" data-toggle="tab">Equipment</a></li>
+		<li><a href="#tab_comments" data-toggle="tab"><span class='visible-md visible-lg'>Overall </span>Comments</a></li>
+	</ul>
+	<div class='tab-content'>
+		<div class='tab-pane active' id="tab_general">
+
+			<h3 class='section_header'>Audited Employee(s)</h3>
+
+			<div class="row">
+				<div class="col-md-6 col-sm-6">
+					<label for="ResponsibleDepartmentFacilityId" class="control-label">Auditee Facility</label>
+					<select name="ResponsibleDepartmentFacilityId" id="ResponsibleDepartmentFacilityId" class="form-control pageRequired" title='Select a facility' required>
+						<option value="">Select...</option>
+						<option value="CED">ComEd</option>
+						<option value="PDS">PECO</option>
+						<option value="BSC">BSC</option>
+						<option value="BGE">BGE</option>
+					</select>
+
+					<label for="ResponsibleDepartmentId" class="control-label">Auditee Department</label>
+					<select name="ResponsibleDepartmentId" id="ResponsibleDepartmentId" class="form-control">
+						<option value="" disabled>(Select facility first)</option>
+					</select>
+
+
+					<label for="ResponsibleOfficeCode" class="control-label">Auditee Office</label>
+					<select name="ResponsibleOfficeCode" id="ResponsibleOfficeCode" class="form-control">
+						<option value="" disabled>(Select facility first)</option>
+					</select>
+
+				</div>
+
+				<div class="col-md-6 col-sm-6">
+
+					<label class='control-label'>Auditee Status</label>
+					<div class="btn-group clearfix">
+						<label class='btn btn-toggle active'><input type="radio" name="AuditeeStatus" id="AuditeeStatusEmployee" value="E" checked="checked" /> Employee</label>
+						<label class='btn btn-toggle'><input type="radio" name="AuditeeStatus" id="AuditeeStatusContractor" value="C" /> Contractor</label>
+					</div>
+
+					<div class='safety_audit_only'>
+						<label class='control-label' for='supervisor_of_auditee'>Supervisor of Auditee</label>
+						<div class="input-group">
+							<input type="text" name="supervisor_of_auditee" id="supervisor_of_auditee" class="form-control" value="" required="required" title="Please enter an employee's name, or E or C number.">
+							<span class="input-group-btn">
+								<button class="btn btn-default btn-clear-textfield-typeahead" type="button">
+									<span class='glyphicon glyphicon-remove'></span>
+								</button>
+							</span>
+						</div>
+						<input type='hidden' name='supervisor_of_auditee_empid' id='supervisor_of_auditee_empid' />
+						<input type='hidden' name='supervisor_of_auditee_type' id='supervisor_of_auditee_type' />
+						<input type='hidden' name='supervisor_of_auditee_uid' id='supervisor_of_auditee_uid' />
+					</div>
+					<!-- <div class='peer_to_peer_only'>
+						<label class='control-label' for='org_number_auditee'>Organization Number of Auditee</label>
+						
+							<input type="text" name="org_number_auditee" id="org_number_auditee" class="form-control" value="">
+						<strong>NOTE: THIS VALUE WILL NOT YET BE SAVED WHEN SUBMITTED</strong>
+					</div> -->
+
+				</div>
+			</div>
+
+			<h3 class='section_header'>Auditor</h3>
+
+
+			<div class="row">
+				<div class="col-md-6 col-sm-6">
+
+					<label class='control-label' for="ReportingDepartmentFacilityId" class="select">Auditor Facility</label>
+					<select class="form-control pageRequired" id="ReportingDepartmentFacilityId" name="ReportingDepartmentFacilityId" required title='Select a facility'>
+						<option value="" disabled selected>Select...</option>
+						<option value="CED">ComEd</option>
+						<option value="PDS">PECO</option>
+						<option value="BSC">BSC</option>
+						<option value="BGE">BGE</option>
+					</select>
+
+					<label class='control-label' for="ReportingDepartmentId" class="select">Auditor Department</label>
+					<select class="form-control" id="ReportingDepartmentId" name="ReportingDepartmentId">
+						<option value="" disabled>(Select facility first)</option>
+					</select>
+					
+				</div>
+				<div class="col-md-6 col-sm-6">
+
+					<label class='control-label' for="EventDate">Audit Date</label> <label class='control-label' for="EventTime">and Time</label>
+					<div class='form-control-horizontal'>
+						<input class="form-control" type="date" name="EventDate" id="EventDate" value="">
+						<input class="form-control" type="time" name="EventTime" id="EventTime" value="">
+					</div>
+
+					<label class='control-label' for="auditor">Auditor</label>
+
+					<div class="input-group">
+						<input class="form-control pageRequired" type="text" name="auditor" id="auditor" required title="Please enter an employee's name, or E or C number."/>
+						<span class="input-group-btn">
+							<button class="btn btn-default btn-clear-textfield-typeahead" type="button"><span class='glyphicon glyphicon-remove'></span></button>
+						</span>
+					</div>
+
+					<input type='hidden' name='auditor_empid' id='auditor_empid' />
+					<input type='hidden' name='auditor_type' id='auditor_type' />
+					<input type='hidden' name='auditor_uid' id='auditor_uid' />
+
+					
+				</div>
+			</div>
+
+
+			<h3 class='section_header'>General Information</h3>
+
+			
+
+
+			<div class="row">
+				<div class="col-md-6  col-sm-6">
+
+					<label class='control-label'>Shift</label>
+					<div class="btn-group clearfix">
+						<label class='btn btn-toggle'><input type="radio" name="ShiftId" id="shift_regular" class='' value="R">Regular</label>
+						<label class='btn btn-toggle'><input type="radio" name="ShiftId" id="shift_overtime" class=''  value="O">Overtime</label>
+					</div>
+
+
+					<label class='control-label'>Plan</label>
+					<div class="btn-group clearfix">
+						<label class='btn btn-toggle'><input type="radio" name="PlanId" id="plan_scheduled" value="S">Scheduled</label>
+						<label class='btn btn-toggle'><input type="radio" name="PlanId" id="plan_emergent" value="E">Emergent</label>
+					</div>
+
+					<label class='control-label'>Phase</label>
+
+					<div class="btn-group clearfix">
+						<label class='btn needsclick btn-toggle'><input type="checkbox" value="Setup" name="PhaseSetup" id="PhaseSetup">Setup</label>
+						<label class='btn needsclick btn-toggle'><input type="checkbox" value="Execution" name="PhaseExecution" id="PhaseExecution">Execution</label>
+						<label class='btn needsclick btn-toggle'><input type="checkbox" value="Cleanup" name="PhaseCleanup" id="PhaseCleanup">Cleanup</label>
+					</div>
+
+
+				</div>
+				<div class="col-md-6 col-sm-6">
+					<!--  -->
+
+					<label class='control-label' for="GeoLocation">Geographic Location</label>
+					<input class='form-control' type="text" name="GeoLocation" id="GeoLocation" value="" />
+
+					<div class="btn-group btn-group-justified">
+						<a class='btn btn-default' id='btn_use_device_gps'><span class="glyphicon glyphicon-screenshot"></span> Use Device GPS</a>
+						<a class='btn btn-default' href="http://maps.apple.com/?ll=" id='btn_show_on_map'><span class='glyphicon glyphicon-map-marker'></span> Show on Map</a>
+						<!-- <a class='btn btn-default' id='btn_use_map'><span class="glyphicon glyphicon-screenshot"></span> Find on a Map</a> -->
+					</div>
+
+					<!-- <div class="checkbox">
+						<input type="checkbox" name="checkbox-1a" id="checkbox-1a">
+						<label for="checkbox-1a">Audit was required by an AR assignment</label>
+					</div> -->
+					<div class="checkbox">
+						<input type="checkbox" name="IsNearMiss" id="IsNearMiss">
+						<label for="IsNearMiss">This audit identified a NEAR MISS EVENT</label>
+					</div>
+
+				</div>
+			</div>
+
+			<h3 class='section_header'>Work Tasks</h3>
+
+			<div class="btn btn-primary btn-block" data-toggle="modal" id='lookup-work-tasks-button' data-target="#worktasks-lookup-modal" style='margin:10px 0'>
+			  Lookup Work Tasks
+			</div>
+
+			<div id='worktask-selected'>
+				<table class='table table-striped table-condensed'>
+					<thead>
+						<tr>
+							<th>Primary Task</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody id='worktask-selected-tbody'>
+						<tr id='worktask-nothing-selected'>
+							<td>No tasks have been selected</td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h3 class='section_header'>Weather Conditions</h3>
+
+			<div class="row weather-conditions-group">
+				<div class="col-md-4  col-sm-4">
+					<div class="btn-group-vertical">
+						<label class='btn btn-default '>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="extreme_hot" id="extreme_hot" value="EXTREME HOT (&gt;90F)">
+							Extreme Hot (&gt;90F)
+						</label>
+						
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="mostly_sunny" id="mostly_sunny" value="MOSTLY SUNNY">
+							Mostly Sunny
+						</label>
+						
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="dawn_dusk" id="dawn_dusk" value="DAWN/DUSK">
+							Dawn / Dusk
+						</label>
+						
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="dark" id="dark" value="DARK">
+							Dark
+						</label>
+						
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="windy_gusty" id="windy_gusty" value="WINDY/GUSTY">
+							Windy/Gusty
+						</label>
+						
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="high_winds" id="high_winds" value="HIGH WINDS">
+							High Winds
+						</label>
+						
+					</div>
+				</div>
+
+				
+
+				<div class="col-md-4 col-sm-4">
+					<div class="btn-group-vertical">
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="mostly_cloudy" id="mostly_cloudy" value="MOSTLY CLOUDY">
+							Mostly Cloudy
+						</label>
+
+
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="fog" id="fog" value="FOG">
+							Fog
+						</label>
+
+
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="mist_light_rain" id="mist_light_rain" value="MIST / LIGHT RAIN">
+							Mist / Light Rain
+						</label>
+
+
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="rain_showers" id="rain_showers" value="RAIN SHOWERS">
+							Rain Showers
+						</label>
+
+
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="heavy_rain" id="heavy_rain" value="HEAVY RAIN">
+							Heavy Rain
+						</label>
+
+
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="thunder_storms" id="thunder_storms" value="THUNDER STORMS">
+							Thunder Storms
+						</label>
+					</div>
+					
+				</div>
+				<div class="col-md-4 col-sm-4">
+					<div class="btn-group-vertical">
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="freezing_rain" id="freezing_rain" value="FREEZING RAIN">
+							Freezing Rain
+						</label>
+						
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="rain_snow_mix" id="rain_snow_mix" value="RAIN-SNOW MIX">
+							Rain-Snow Mix
+						</label>
+						
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="snow" id="snow" value="SNOW">
+							Snow
+						</label>
+						
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="blizzard" id="blizzard" value="BLIZZARD">
+							Blizzard
+						</label>
+						
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="extreme_cold" id="extreme_cold" value="EXTREME COLD (&lt;5F)">
+							Extreme Cold (&lt;5F)
+						</label>
+						
+						<label class='btn btn-default'>
+							<span class='glyphicon glyphicon-ok'></span>
+							<input type="checkbox" class='' name="n_a" id="n_a" value="N/A (INDOORS)">
+							N/A (Indoors)
+						</label>
+					</div>
+				</div>
+			</div>
+			
+			<div id="vendor_section" class="safety_audit_only">
+				<h3 class='section_header'>Vendor Products and Services Issue/Problem</h3>						
+				<div class='row'>
+					<div class='col-md-6'>
+						<label class='control-label' for="vendor_name">Vendor Name</label>
+
+						<div class="input-group">
+							<input class="form-control" type="text" name="vendor_name" id="vendor_name" value="" />
+							<span class="input-group-btn">
+								<button class="btn btn-default btn-clear-textfield-typeahead-vendor" type="button"><span class='glyphicon glyphicon-remove'></span></button>
+							</span>
+						</div>
+
+						<label class='control-label' for="vendor_code">Vendor Code</label>
+						<input class="form-control" type="text" name="vendor_code" id="vendor_code" value=""  disabled/>
+						<input type="hidden" name="vendor_suffix" id="vendor_suffix" value=""  disabled/>
+
+					</div>
+					<div class='col-md-6'>
+						<label class='control-label'>Vendor Trend Issue</label>
+						<div class="btn-group clearfix btn-group-vendor-trend-issue">
+							<label class='btn btn-toggle disabled'><input type="radio" name="TCCode2" id="vendor_trend_issue_s" value="Serv">Services</label>
+							<label class='btn btn-toggle disabled'><input type="radio" name="TCCode2" id="vendor_trend_issue_m" value="Mat">Material</label>
+						</div>
+
+						<label class='control-label'>Vendor Trend Description</label>
+						<div class="btn-group clearfix btn-group-vendor-trend-desc" >
+							<label class='btn btn-toggle disabled'><input type="radio" name="TCCode3" id="vendor_trend_description_qos" value="QoS">Quality of Service</label>
+							<label class='btn btn-toggle disabled'><input type="radio" name="TCCode3" id="vendor_trend_description_vs" value="VS">Vendor Safety</label>
+							<label class='btn btn-toggle disabled'><input type="radio" name="TCCode3" id="vendor_trend_description_dd" value="DD">Delayed Delivery</label>
+							<label class='btn btn-toggle disabled'><input type="radio" name="TCCode3" id="vendor_trend_description_vr" value="VR">Vendor Rework</label>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class='navbar navbar-footer'>
+				<div class="btn btn-primary btn-form-next-tab pull-right">Next Tab <span class='glyphicon glyphicon-arrow-right'></span></div>
+			</div>
+		</div>
+
+		<div class='tab-pane' id='tab_jobarea'>
+			<div class="panel-group"></div>
+			<div class='navbar navbar-footer'>
+				<div class="btn btn-primary btn-form-previous-tab pull-left"><span class='glyphicon glyphicon-arrow-left'></span> Previous Tab</div>
+				<div class="btn btn-primary btn-form-next-tab pull-right">Next Tab <span class='glyphicon glyphicon-arrow-right'></span></div>
+			</div>
+		</div>
+		<div class='tab-pane' id='tab_humanperf'>
+			<div class="panel-group"></div>
+			<div class='navbar navbar-footer'>
+				<div class="btn btn-primary btn-form-previous-tab pull-left"><span class='glyphicon glyphicon-arrow-left'></span> Previous Tab</div>
+				<div class="btn btn-primary btn-form-next-tab pull-right">Next Tab <span class='glyphicon glyphicon-arrow-right'></span></div>
+			</div>
+		</div>
+		<div class='tab-pane' id='tab_workpractices'>
+			<div class="panel-group"></div>
+			<div class='navbar navbar-footer'>
+				<div class="btn btn-primary btn-form-previous-tab pull-left"><span class='glyphicon glyphicon-arrow-left'></span> Previous Tab</div>
+				<div class="btn btn-primary btn-form-next-tab pull-right">Next Tab <span class='glyphicon glyphicon-arrow-right'></span></div>
+			</div>
+		</div>
+		<div class='tab-pane' id='tab_equipment'>
+			<div class="panel-group"></div>
+			<div class='navbar navbar-footer'>
+				<div class="btn btn-primary btn-form-previous-tab pull-left"><span class='glyphicon glyphicon-arrow-left'></span> Previous Tab</div>
+				<div class="btn btn-primary btn-form-next-tab pull-right">Next Tab <span class='glyphicon glyphicon-arrow-right'></span></div>
+			</div>
+		</div>
+		<div class='tab-pane' id='tab_comments'>
+
+			<h3 class='section_header'>Overall Comments</h3>
+			<strong>Explain exceeds &amp; below standards (deviations) and discussion/coaching</strong>
+			<textarea class='form-control' name='overall_comments' id='overall_comments' maxlength='4000' required></textarea>
+
+			<h3 class='section_header'>Immediate Actions Taken</h3>
+
+			<div class="btn-group clearfix">
+				<label class='btn btn-toggle'><input type="radio" name="action_taken" id="action_take_coaching_only" value="Coaching Only" />Coaching Only</label>
+				<label class='btn btn-toggle'><input type="radio" name="action_taken" id="action_take_coaching_with_followup" value="Coaching With Followup" />Coaching With Followup</label>
+			</div>
+
+			<div id="section-coaching-with-followup">
+				<h3 class='section_header'>Followup Actions or Investigations</h3>
+
+				<label for="followup_actions_to_be_taken" class="control-label">Describe Followup Actions to be Taken</label>
+				<textarea class='form-control' name='followup_actions_to_be_taken' id='followup_actions_to_be_taken' maxlength='4000'></textarea>
+
+			
+
+				<div class="btn-group-vertical">
+					<label class='btn btn-default'>
+						<input type="checkbox" value="followup_tracked_in_passport" id='followup_tracked_in_passport'>
+						Coaching with Follow Up to be tracked by Action Tracking assignment in PassPort
+					</label>
+				</div>
+
+				<div id="section-coaching-with-followup-in-passport">
+					<div class='row'>
+						<div class='col-md-6 col-sm-6'>
+							
+
+							<label class='control-label' for="followup_responsible_facility" class="select">Responsible Facility</label>
+							<select class="form-control" id="followup_responsible_facility" name="followup_responsible_facility">
+								<option value="" disabled selected>Select...</option>
+								<option value="CED">ComEd</option>
+								<option value="PDS">PECO</option>
+								<option value="BSC">BSC</option>
+								<option value="BGE">BGE</option>
+							</select>
+
+							<label class='control-label' for="followup_responsible_department" class="select">Responsible Department</label>
+							<select class="form-control" id="followup_responsible_department" name="followup_responsible_department">
+								<option value="" disabled>(Select facility first)</option>
+							</select>
+
+						</div>
+						<div class='col-md-6 col-sm-6'>
+							
+							<label class='control-label'>Assignment Type</label>
+
+							<div class="btn-group clearfix">
+								<label class='btn btn-toggle'><input type="radio" value="CA" name="followup_assignment_type">CA</label>
+								<label class='btn btn-toggle'><input type="radio" value="AITL" name="followup_assignment_type">AITL</label>
+							</div>
+
+							<label class='control-label'>Due Date</label>
+							<input type="date" name="followup_duedate" id="followup_duedate" class="form-control" title="">
+
+						</div>
+					</div>
+
+					<label class='control-label' for="assignment_subject">Assignment Subject</label>
+					<input class="form-control" type="text" name="assignment_subject" id="assignment_subject" value="" />
+
+					<label for="assignment_details" class="control-label">Assignment Details</label>
+					<textarea class='form-control' name='assignment_details' id='assignment_details' maxlength='1000'></textarea>
+
+					<label class='control-label' for="assignment_person">Enter the name of the person who agreed to this assignment</label>
+					<div class="input-group">
+						<input class="form-control" type="text" name="assignment_person" id="assignment_person" value="" />
+						<span class="input-group-btn">
+							<button class="btn btn-default btn-clear-textfield-typeahead" type="button"><span class='glyphicon glyphicon-remove'></span></button>
+						</span>
+					</div>
+					<input type='hidden' name='assignment_person_empid' id='assignment_person_empid' />
+					<input type='hidden' name='assignment_person_type' id='assignment_person_type' />
+					<input type='hidden' name='assignment_person_uid' id='assignment_person_uid' />
+				</div>
+			</div>
+
+
+		<!-- 	<h3 class='section_header'>Photo Attachment</h3>
+
+			<div class="row" id="photo_buttons">
+				<div class="col-md-6 col-sm-6"><a onclick="capturePhoto();" class='btn btn-lg btn-block btn-default'><span class="glyphicon glyphicon-camera"></span>Capture Photo</a></div>
+				<div class="col-md-6 col-sm-6"><a onclick="getPhoto();" class='btn btn-lg btn-block btn-default'><span class="glyphicon glyphicon-picture"></span>Get Photo From Library</a></div>
+			</div> -->
+
+			<div class='row'>
+				<div class='img_holder'>
+					<img id="largeImage"  />
+				</div>
+			</div>
+
+			<div id="exif_from_photo"></div>
+			<div style='text-align:center'>
+				<div onclick='removePhoto()' id='remove_photo_button' class='btn btn-default' style='margin: 20px auto;display:none;'> <span class='glyphicon glyphicon-trash'></span> Remove Photo</div>
+			</div>
+
+			<!-- <div class="col-md-12">
+				<textarea cols="40" rows="2" name="description" id="description" placeholder="Enter a photo description" class='form-control' style='margin:20px 0;'></textarea>
+			</div> -->
+		
+			
+			<div class='navbar navbar-footer'>
+				<div class="btn btn-primary btn-form-previous-tab pull-left"><span class='glyphicon glyphicon-arrow-left'></span> Previous Tab</div>
+				<input type="submit" class="btn btn-primary pull-right" value="Submit Form" />
+			</div>
+		</div>
+	</div>
+	<input type='hidden' id='arnumber' name='arnumber' />
+</form>
+
+<div id="success_screen" style='display:none;'>
+	<div class="jumbotron">
+		<h1 style='color:green'><span class='glyphicon glyphicon-ok' ></span> <span id="success_screen_text">Audit Submitted</span></h1>
+		<p>New AR ID <span id="newARID"></span></p>
+
+		<h3>What next?</h3>
+
+		<div class='row' style='margin-bottom:40px;margin-top:40px;'>
+			<div class='col-md-6 col-sm-6'>
+				<a class='btn btn-primary btn-block' href="bootstrap-form.html">New Safety Audit</a>
+			</div>
+			<div class='col-md-6 col-sm-6'>
+				<a class='btn btn-primary btn-block' href="bootstrap-form.html?type=peertopeer">New Peer to Peer Observation</a>
+			</div>
+		</div>
+		<div class='row' style='margin-bottom:40px;'>
+			<div class='col-md-12'>
+				<a class='btn btn-primary btn-block' id="reload_submitted_audit">Reload the audit you just submitted</a>
+			</div>
+		</div>
+
+		<div class='row' id='next_draft' >
+			<div class='col-md-12'>
+				You have another draft stored
+				<a class='btn btn-primary btn-block' id="next_draft_button">Load next draft</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+</div>
+</article>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+	<div class="modal-content">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="modal-title" id="myModalLabel">Submitting Form<h4>
+	  </div>
+	  <div class="modal-body">
+		
+	  </div>
+	  <div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		
+	  </div>
+	</div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="worktasks-lookup-modal" tabindex="-1" role="dialog" aria-labelledby="worktasks-lookup-modal-label" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="worktasks-lookup-modal-label">Add Primary Work Tasks</h4>
+			</div>
+			<div class="modal-body">
+				<label class='control-label' for="functional_task_grouping" class="select">Functional Task Grouping</label>
+				<select class="form-control" id="functional_task_grouping" name="functional_task_grouping">
+					<option value="" disabled selected>(Select)</option>
+					<option value="AISP">AISP</option>
+					<option value="BGE DSO/TSO">BGE DSO/TSO</option>
+					<option value="C&amp;M ComEd OH">C&amp;M ComEd OH</option>
+					<option value="C&amp;M ComEd UG">C&amp;M ComEd UG</option>
+					<option value="C&amp;M Overhead BGE">C&amp;M Overhead BGE</option>
+					<option value="C&amp;M PECO Aerial">C&amp;M PECO Aerial</option>
+					<option value="C&amp;M PECO UG">C&amp;M PECO UG</option>
+					<option value="C&amp;M Underground BGE">C&amp;M Underground BGE</option>
+					<option value="Common Tasks">Common Tasks</option>
+					<option value="Contractors">Contractors</option>
+					<option value="DSO">DSO</option>
+					<option value="Engineering">Engineering</option>
+					<option value="Field and Meter Services">Field and Meter Services</option>
+					<option value="Fleet">Fleet</option>
+					<option value="Gas BGE">Gas BGE</option>
+					<option value="Gas PECO">Gas PECO</option>
+					<option value="Meter Reading">Meter Reading</option>
+					<option value="OCC/TSO">OCC/TSO</option>
+					<option value="Performance Assessment group">Performance Assessment group</option>
+					<option value="SSG">SSG</option>
+					<option value="SUPPLY">SUPPLY</option>
+					<option value="Safety">Safety</option>
+					<option value="T&amp;S">T&amp;S</option>
+					<option value="Training">Training</option>
+					<option value="Work Management">Work Management</option>
+				</select>
+
+				<div id='worktask-lookup-results'>
+				
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default " data-dismiss="modal">Close</button>
+				<div class='btn btn-primary' onclick='addSelectedTasks()'>Add Selected Tasks</div>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<nav class="navbar navbar-default navbar-fixed-bottom bottom-warning" id="viewing_entry_warning" role="navigation">
+  <p>You are viewing this previously submitted entry and will not be able to edit it.</p>
+</nav>
+
+<!-- <nav class="navbar navbar-default navbar-fixed-bottom bottom-warning" id="offline_warning" role="navigation">
+  <p>You are in offline mode. You will need to login before submitting. Changes will be saved as a draft.</p>
+</nav> -->
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="quickLogin" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Login</h4>
+      </div>
+      <div class="modal-body">
+        
+
+        <p id="quick_login_reason"></p>
+
+	    <p id="quick_login_statement">Please use Layer 7 credentials</p>
+
+	    <input type="text" name="quick_login_username" id="quick_login_username" class="form-control" value="" required="required" title="" placeholder='Username' required>
+
+	    <input type="password" name="quick_login_password" id="quick_login_password" class="form-control" value="" required="required" title="" placeholder='Password' required>
+
+	    <button class="btn btn-primary btn-lg btn-block" id='quick_login_loginbutton' value='Login' data-loading-text=" <span class='glyphicon glyphicon-refresh fa-spin'></span> Logging in..." />Login</button>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class='tinyalert' id="draftAlert">
+	Saving Draft
+</div>
+<div class='tinyalert' id="loadingFromServer">
+	Saving Draft
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
+<script src="bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
+<script src="bower_components/momentjs/moment.js"></script>
+<script src="bower_components/hammerjs/hammer.min.js"></script>
+
+<script src="js/handlebars.js"></script>
+<script src="js/jquery.validate.js"></script>
+<script src="js/jquery.validate.bootstrap.js"></script>
+<script src="js/drafts-db.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/ImageMetaDataReader.js"></script>
+<script src="js/menu.js"></script>
+
+<script id="entry-template" type="text/x-handlebars-template">
+{{#each myObject}}
+<div class="panel panel-default">
+	<div class="panel-heading"  data-toggle="collapse" data-target="#{{{generateId @key}}}">
+		<div class='row'>
+			<div class='col-md-8 col-sm-8'>
+
+				<h4 class="panel-title"><span class='glyphicon glyphicon-plus-sign'></span> {{@key}}</h4>
+			</div>
+			<div class='col-md-4 col-sm-4'>
+				<table style='width:100%'>
+					<tr>
+						<td class='count_exceeds'><span class='visible-sm visible-xs'>E: </span><span class='visible-md visible-lg'>Exceeds:</span> <span class="count_exceeds">0</span></td>
+						<td class='count_acceptable'><span class='visible-sm visible-xs'>A: </span><span class='visible-md visible-lg'>Acceptable:</span> <span class="count_acceptable">0</span></td>
+						<td class='count_below'><span class='visible-sm visible-xs'>B: </span><span class='visible-md visible-lg'>Below:</span> <span class="count_below">0</span></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div id="{{{generateId @key}}}" class="panel-collapse collapse in">
+	<div class="panel-body">
+	{{#each this}}
+		<div class="row safety-audit-row">
+			<div class='col-md-1 col-sm-1 col-xs-1'>{{this.code}}</div>
+			<div class='col-md-4 col-sm-11 col-xs-11'>{{this.text}}</div>
+			{{! 
+			note the use of ../../tabid
+				see http://stackoverflow.com/questions/12297959/access-properties-of-the-parent-with-a-handlebars-each-loop for why
+			}}
+
+			<div class="col-md-4 col-sm-5 btn-group clearfix">
+				<label class='btn btn-toggle'><input type='radio' data-code='{{this.code}}' class='checkbox-row' value='Exceeds' name='{{{generateName ../../tabid this.code}}}' />Exceeds</label>
+				<label class='btn btn-toggle'><input type='radio' data-code='{{this.code}}' class='checkbox-row' value='Meets' name='{{{generateName ../../tabid this.code}}}' />Acceptable</label>
+				<label class='btn btn-toggle'><input type='radio' data-code='{{this.code}}' class='checkbox-row' value='Below' name='{{{generateName ../../tabid this.code}}}' />Below</label>
+			</div>
+
+			<div class='col-md-3 col-sm-7'>
+				<input class="form-control checkbox-row-comment" type='text' data-code='{{this.code}}' name='{{{generateName ../../tabid this.code}}}_comment' placeholder="Enter any comments..." disabled/>
+			</div> 
+		</div>
+
+	{{/each}}
+	</div>
+	</div>
+</div>
+{{/each}}
+</script>
+
+<script id="worktask-template" type="text/x-handlebars-template">
+<div class='row'>
+	{{#each columns}}
+		<div class="col-md-3 col-sm-6">
+			<div class="btn-group-vertical">
+			{{#each this}}
+				<label class='btn btn-default'>
+					
+					<input type="checkbox" class='worktask-lookup' name="worktask-lookup[]" id="worktask-lookup-{{this.TaskCode}}" data-taskcode='{{this.TaskCode}}' data-taskname='{{this.TaskName}}' value="worktask-lookup-{{this.TaskCode}}"> {{this.TaskName}}
+				</label>
+			{{/each}}
+			</div>
+		</div>
+	{{/each}}
+</div>
+</script>
+
+<script id="worktask-selected-template" type="text/x-handlebars-template">
+
+	{{#each tasks}}
+		<tr class='worktask-selected-row'>
+			<td>
+				<input type='hidden' name='WorkTasks[]' value="{{this.TaskName}}">
+				{{this.TaskName}}
+			</td>
+			<td>
+				<div class='btn btn-sm btn-default' onclick='removeTask("{{this.TaskCode}}")'><span class='glyphicon glyphicon-trash'></span> Remove</div>
+			</td>
+		</tr>
+	{{/each}}
+</script>
+<script src="tabs.js"></script>
+<script src="tabs-peertopeer.js"></script>
+<script src="js/bigform.js"></script>
+</body>
+</html>

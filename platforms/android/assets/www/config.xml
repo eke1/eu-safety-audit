@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.example.hello" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>EU Safety Audit App</name>
+    <description>
+        An Exelon Utilities Application for Safety Audits
+    </description>
+    <author email="peter.harris@constellation.com">
+        Peter Harris
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <preference name="fullscreen" value="true" />
+    <preference name="webviewbounce" value="true" />
+
+    <feature name="http://api.phonegap.com/1.0/camera"/>
+    <feature name="http://api.phonegap.com/1.0/contacts"/>
+    <feature name="http://api.phonegap.com/1.0/file"/>
+    <feature name="http://api.phonegap.com/1.0/geolocation"/>
+    <feature name="http://api.phonegap.com/1.0/media"/>
+    <feature name="http://api.phonegap.com/1.0/network"/>
+    <feature name="http://api.phonegap.com/1.0/notification"/>
+    <feature name="Camera">
+        <param name="ios-package" value="CDVCamera" />
+    </feature>
+<!--     <plugins>
+        <plugin name="ExifReader" value="ExifReader" />
+    </plugins> -->
+    
+</widget>

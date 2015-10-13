@@ -1,0 +1,1 @@
+cordova.define("org.apache.cordova.core.geolocation.PositionError",function(e,t,n){var r=function(e,t){this.code=e||null;this.message=t||""};r.PERMISSION_DENIED=1;r.POSITION_UNAVAILABLE=2;r.TIMEOUT=3;n.exports=r});

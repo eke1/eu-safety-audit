@@ -1,0 +1,1 @@
+cordova.define("org.apache.cordova.core.file.LocalFileSystem",function(e,t,n){var r=e("cordova/exec"),i=function(){};i.TEMPORARY=0;i.PERSISTENT=1;n.exports=i});

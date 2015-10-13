@@ -1,0 +1,289 @@
+<!-- $pagetitle: Settings -->
+<!-- @import "header.kit" -->
+<!-- @import "bootstrap-menu.kit" -->
+
+<div id="settings_page">
+<h1>Version</h1>
+<p>This version of the app was built on <span id='version'></span></p>
+
+<h1>Connectivity Test</h1>
+<div id="connectivity_test">
+	<div id="connectivity_good"><p class="connectivity_explanation"> <span class='glyphicon glyphicon-ok'></span> Server communication to <span class='connectivity_link'></span> was successful.</p></div>
+	<div id="connectivity_bad">
+		
+		<p class="connectivity_explanation"> <span class='glyphicon glyphicon-warning-sign'></span> Server communication to <span class='connectivity_link'></span> was unsuccessful.</p>
+		<p>This may be caused by a number of issues including</p>
+		<ul>
+			<li>Network unavailable</li>
+			<li>Server outage</li>
+			<li>Firewall blocking</li>
+		</ul>
+		<p>Please make sure your device has a working data connection, and try again. If you are still unsuccesful please contact <a href="iPadSafetyApp@exeloncorp.com">iPadSafetyApp@exeloncorp.com</a> for assistance.</p>
+
+		<!-- <button class='btn btn-primary btn-lg btn-block'>/button> -->
+
+
+	</div>
+	<button class="btn btn-primary btn-lg btn-block" id='connectivity_test_button' value='Try Connectivity Test Again<' data-loading-text="<span class='glyphicon glyphicon-refresh fa-spin'></span> Testing connectivity..." />Test Connectivity Again</button>
+</div>
+
+
+<h1>Environment Settings</h1>
+<p>This affects what services the app will use for login and submissions</p>
+<table class="table">
+	<tr>
+		<th>Services Tier</th>
+		<td><select id="services_tier" class='form-control'></select></td>
+	</tr>
+	<tr>
+		<th>Login</th>
+		<td><select id="services_login" class='form-control'></select></td>
+	</tr>
+	<tr>
+		<th id="lock_option_text">Options Lock</th>
+		<td><div class='btn btn-warning' id="lock_option_btn">Unlock Options</div></td>
+	</tr>
+</table>
+
+
+
+<h1>Auditor Info</h1>
+<p>This will autofill the auditor field when you start a new form. Updating the auditor fields will on a form will save the values for later use.</p>
+<table class="table">
+	<tr>
+		<th>Name</th>
+		<td id="auditor_name"></td>
+	</tr>
+	<tr>
+		<th>E/C Number</th>
+		<td id="auditor_id"></td>
+	</tr>
+	<tr>
+		<th>Facility &amp; Department</th>
+		<td id="auditor_facility_department"></td>
+	</th>
+</table>
+
+
+<h1>Offline Cache Status</h1>
+<table class="table">
+	<tr>
+		<th>Employee Records Synced</th>
+		<td id="employee_records_sync_count">0</td>
+	</tr>
+	<tr>
+		<th>Vendor Records Synced</th>
+		<td id="vendor_records_sync_count">0</td>
+	</tr>
+	<tr>
+		<th>Work Task Categories Synced</th>
+		<td id="work_tasks_sync_count">0</td>
+	</tr>
+	<tr>
+		<th>Facility Departments &amp; Offices Synced</th>
+		<td>			
+			<table class='table table-condensed' id="facility_departments_synced">
+				<thead>
+					<tr>
+						<th>Facility</th>
+						<th>Departments</th>
+						<th>Contractors</th>
+						<th>Offices</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</td>
+	</th>
+</table>
+
+
+<div class='cache_buttons'>
+	<button class='btn btn-danger btn-xs' id="clear_cached_data">Clear Cached Data</button>
+	<button class='btn btn-primary' id="update_cached_data">Update Cached Data</button>
+</div>
+<div class='cache_progress'>
+	<h2>Cache Update Progress</h2>
+	<div class="progress ">
+		<div class="progress-bar"  role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="cache_update_status">
+			<span>0% Complete</span>
+		</div>
+	</div>
+
+	<h3>Active Requests</h3>
+	<table id="active_requests" class='table table-condensed'>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+</div>
+</div>
+
+</article>
+</div>
+
+<!-- @import "footer.kit" -->
+
+<script src="js/offline_cache_sync.js"></script>
+
+<script>
+var facilities;
+var totalUpdateJobs = 0;
+var completedJobs = 0;
+var unlockedOptions = false;
+$(function(){
+
+	facilities = [
+		{"code": "CED", "displayname": "ComEd"},
+		{"code": "PDS", "displayname": "PECO"},
+		{"code": "BSC", "displayname": "BSC"},
+		{"code": "BGE", "displayname": "BGE"},
+	]
+
+	updateSyncCounts();
+
+	$("#clear_cached_data").click(function(){clear_cached_data()});
+	$("#update_cached_data").click(function(){update_cached_data()});
+	
+	readLocalAuditor();
+
+	FastClick.attach(document.body);
+
+	// $("#services_tier").text(localStorage.services);
+	// $("#services_login").text(localStorage.services_login);
+
+	$.get('version.txt', function(version){
+		$("#version").html(version);
+	});
+
+	$("#connectivity_test_button").click(function(){ connectivityTest(); });
+	connectivityTest();
+
+
+	
+	var environments = services.getOptionsforEnvironments();
+	for(var i = 0; i < environments.length; i++){
+		$("#services_tier").append("<option>" + environments[i] + "</option>");
+	}
+
+	
+	var logins = services.getOptionsforLogin();
+	for(var i = 0; i < logins.length; i++){
+		$("#services_login").append("<option>" + logins[i] + "</option>");
+	}
+
+	$("#services_tier").val(localStorage.services);
+	$("#services_login").val(localStorage.services_login);
+
+	$("#services_tier").change(function(){
+		
+   	
+		services.setEnvironment($(this).val());
+
+		connectivityTest();
+		
+	});
+
+	$("#services_login").change(function(){
+		services.setLoginEndpoint($(this).val());
+	});
+
+	lockServiceOptions();
+
+	$("#lock_option_btn").click(function(){
+		if($(this).text() == "Unlock Options"){
+			if(!unlockedOptions)
+				var sign = prompt("This option allows switching environments, and is necessary for testing. It is protected, please enter the correct phrase:");
+
+			if (unlockedOptions || sign.toLowerCase() == "a developer told me to do this") {
+				unlockServiceOptions();
+				$(this).text("Lock Options");
+				unlockedOptions = true;
+			}
+		}
+		else{
+			lockServiceOptions();
+			$(this).text("Unlock Options");
+		}
+
+		
+	});
+
+});
+
+function unlockServiceOptions(){
+	$("#services_tier").prop('disabled', false);
+	$("#services_login").prop('disabled', false);
+}
+function lockServiceOptions(){
+	$("#services_tier").prop('disabled', true);
+	$("#services_login").prop('disabled', true);
+}
+function connectivityTest(){
+
+	$("#connectivity_good").hide();
+	$("#connectivity_bad").hide();
+
+	
+	$("#connectivity_test_button").button('loading');
+
+	
+	
+	$(".connectivity_link").text(services.getSelectedL7Base());
+
+	$.ajax({
+		url: services.getSelectedL7Base() + "DepartmentLookup?query",
+		type: 'POST',
+		headers: {
+			"Authorization" : "Bearer "+localStorage.oauthtoken,
+		},
+		data: JSON.stringify({ "facility": "BSC" }),
+		contentType: "application/json; charset=utf-8",
+		dataType: 'JSON',
+		// context: this,
+		success: function(data){
+			console.log("GOOD!");
+			$("#connectivity_good").show();
+			$("#connectivity_test_button").button('reset');
+		},
+		error: function(data){
+			// if(data.status == 401){
+			// 	// alert('Unauthorized! Your login may have expired. Please logout and log back in.')
+			// 	// $("#quick_login_reason").text("Your login may have expired, please reenter your login details to continue");
+			// 	// quickLogin();
+				
+			// }
+			// else{
+			// 	// alert('Service call failed! Using cached values if available...');
+			// }
+			if(data.status == 0){
+				$("#connectivity_bad").show();
+			} else {
+				$("#connectivity_good").show();
+			}
+
+			$("#connectivity_test_button").button('reset');
+			
+		}
+	});
+}
+
+function readLocalAuditor(){
+	var locallyStoredAuditor = localStorage.getObject('auditor');
+	if(locallyStoredAuditor){
+		$("#auditor_facility_department").text(locallyStoredAuditor.facilityId + " - " + locallyStoredAuditor.departmentId);
+		// $("#auditor_facility_department").text(locallyStoredAuditor.departmentId);
+		// $("#ReportingDepartmentId").html("<option selected>" + locallyStoredAuditor.departmentId + "</option>");
+		$("#auditor_name").text(locallyStoredAuditor.ContactName);
+		$("#auditor_id").text(locallyStoredAuditor.ContactEmpid);
+		// $("#auditor_type").val(locallyStoredAuditor.ContactType);
+		// $("#auditor_uid").val(locallyStoredAuditor.ContactUid);	
+	}
+}
+</script>

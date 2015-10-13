@@ -1,0 +1,19 @@
+{
+  "name": "eu-poc",
+  "version": "0.0.0",
+  "authors": [
+    "Peter Harris <peter.harris@constellation.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "momentjs": "~2.5.1"
+  }
+}

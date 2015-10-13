@@ -1,0 +1,1 @@
+cordova.define("org.apache.cordova.core.file.FileError",function(e,t,n){function r(e){this.code=e||null}r.NOT_FOUND_ERR=1;r.SECURITY_ERR=2;r.ABORT_ERR=3;r.NOT_READABLE_ERR=4;r.ENCODING_ERR=5;r.NO_MODIFICATION_ALLOWED_ERR=6;r.INVALID_STATE_ERR=7;r.SYNTAX_ERR=8;r.INVALID_MODIFICATION_ERR=9;r.QUOTA_EXCEEDED_ERR=10;r.TYPE_MISMATCH_ERR=11;r.PATH_EXISTS_ERR=12;n.exports=r});

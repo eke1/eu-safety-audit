@@ -1,0 +1,1 @@
+cordova.define("org.apache.cordova.core.camera.CameraPopoverOptions",function(e,t,n){var r=e("./Camera"),i=function(e,t,n,i,s){this.x=e||0;this.y=t||32;this.width=n||320;this.height=i||480;this.arrowDir=s||r.PopoverArrowDirection.ARROW_ANY};n.exports=i});

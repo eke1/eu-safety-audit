@@ -1,0 +1,1 @@
+cordova.define("org.apache.cordova.core.file.FileUploadOptions",function(e,t,n){var r=function(e,t,n,r,i,s){this.fileKey=e||null;this.fileName=t||null;this.mimeType=n||null;this.params=r||null;this.headers=i||null;this.httpMethod=s||null};n.exports=r});

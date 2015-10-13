@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="shortcut icon" href="../../assets/ico/favicon.png">
+
+	<title>Initial Setup</title>
+
+	<link href="bootstrap-3.0.0/css/bootstrap.css" rel="stylesheet">
+	<link href="css/typeahead-bootstraptheme.css" rel="stylesheet">
+	<link href="css/bge-bootstrap.css" rel="stylesheet">
+	<link href="css/animate.css" rel="stylesheet">
+	<script src="bower_components/sprockets-modernizr/modernizr.js"></script>
+	<script src="js/services_config.js"></script>
+	<script src="js/login.js"></script>
+</head>
+<body><nav id="nav" role="navigation">
+    <div class="block">
+        <div class='offline_status'>
+            You are operating in offline mode, please login before submitting
+            
+            <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#quickLogin">
+			  Login
+			</button>
+        </div>
+        <div class='logged_in_as' style='display:none'></div>
+
+        <ul>
+            <li><a href="drafts.html">Drafts <span class="badge" id='drafts_count'></span></a></li>
+            <li><a href="bootstrap-form.html" id="safety_audit_link">New Safety Audit Form</a></li>
+            <li><a href="bootstrap-form.html?type=peertopeer" id="peet_to_peer_link">New Peer to Peer Observation</a></li>
+            
+            <!-- <li><a href="">Management Form</a></li> -->
+            <!-- <li><a href="">Level 1 Report</a></li> -->
+            <li><a href="bootstrap-search.html" id='search_audit_link'>Search Forms</a></li>
+            <!-- <li><a href="bootstrap-photo.html">Photo Upload</a></li> -->
+            <li><a href="index.html" id="logout_link">Logout</a></li>
+        </ul>
+        <a class='settings_link' href="settings.html"><span class='glyphicon glyphicon-cog'></span>Settings &amp; Info</a>
+
+        <a class='settings_link' href="#" id="help_link"><span class='glyphicon glyphicon-exclamation-sign'></span>Help!</a>        
+        <p id="help_text">Please contact the <br>"iPad Safety App" group at <a href="mailto:iPadSafetyApp@exeloncorp.com">iPadSafetyApp@exeloncorp.com</a> <br>for support</p>
+    </div>
+</nav>
+
+<div id='main'>
+    <header id="top" role="banner">
+    <div class="block">
+        <h1>EU Safety Audit App</h1>
+        <div class="nav-btn" id="nav-open-btn">Navigation</div>
+    </div>
+    </header>
+
+    <article id='main-content'>
+
+
+<h1>Initial Setup</h1>
+
+
+<div class='cache_progress'>
+
+	<h3>Please wait while the app downloads offline sync records</h3>
+
+	<h2>Cache Update Progress</h2>
+	<div class="progress ">
+		<div class="progress-bar"  role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="cache_update_status">
+			<span>0% Complete</span>
+		</div>
+	</div>
+
+	<h3>Active Requests</h3>
+	<table id="active_requests" class='table table-condensed'>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+</div>
+
+
+
+<div id="success_screen" style='display:none;'>
+	<div class="jumbotron">
+		<h1 style='color:green'><span class='glyphicon glyphicon-ok' ></span> <span id="success_screen_text">Cache Synced</span></h1>
+	
+		<h3>What next?</h3>
+
+		<div class='row' style='margin-bottom:40px;margin-top:40px;'>
+			<div class='col-md-6 col-sm-6'>
+				<a class='btn btn-primary btn-block' href="bootstrap-form.html">New Safety Audit</a>
+			</div>
+			<div class='col-md-6 col-sm-6'>
+				<a class='btn btn-primary btn-block' href="bootstrap-form.html?type=peertopeer">New Peer to Peer Observation</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+</article>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="quickLogin" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Login</h4>
+      </div>
+      <div class="modal-body">
+        
+
+        <p id="quick_login_reason"></p>
+
+	    <p id="quick_login_statement">Please use Layer 7 credentials</p>
+
+	    <input type="text" name="quick_login_username" id="quick_login_username" class="form-control" value="" required="required" title="" placeholder='Username' required>
+
+	    <input type="password" name="quick_login_password" id="quick_login_password" class="form-control" value="" required="required" title="" placeholder='Password' required>
+
+	    <button class="btn btn-primary btn-lg btn-block" id='quick_login_loginbutton' value='Login' data-loading-text=" <span class='glyphicon glyphicon-refresh fa-spin'></span> Logging in..." />Login</button>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class='tinyalert' id="draftAlert">
+	Saving Draft
+</div>
+<div class='tinyalert' id="loadingFromServer">
+	Saving Draft
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
+<script src="bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
+<script src="bower_components/momentjs/moment.js"></script>
+<script src="bower_components/hammerjs/hammer.min.js"></script>
+
+<script src="js/handlebars.js"></script>
+<script src="js/jquery.validate.js"></script>
+<script src="js/jquery.validate.bootstrap.js"></script>
+<script src="js/drafts-db.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/ImageMetaDataReader.js"></script>
+<script src="js/menu.js"></script><script src="js/offline_cache_sync.js"></script>
+<script>
+var facilities;
+var totalUpdateJobs = 0;
+var completedJobs = 0;
+$(function(){
+
+	facilities = [
+		{"code": "CED", "displayname": "ComEd"},
+		{"code": "PDS", "displayname": "PECO"},
+		{"code": "BSC", "displayname": "BSC"},
+		{"code": "BGE", "displayname": "BGE"},
+	]
+
+	updateSyncCounts();
+
+	FastClick.attach(document.body);
+
+
+	update_cached_data(function(){
+		localStorage.initialSetupComplete  = true;
+		// sync complete
+		$(".cache_progress").hide();
+		$("#success_screen").show();
+	});
+});
+
+
+</script>

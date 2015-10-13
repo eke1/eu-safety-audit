@@ -1,0 +1,1 @@
+cordova.define("org.apache.cordova.core.geolocation.Position",function(e,t,n){var r=e("./Coordinates"),i=function(e,t){e?this.coords=new r(e.latitude,e.longitude,e.altitude,e.accuracy,e.heading,e.velocity,e.altitudeAccuracy):this.coords=new r;this.timestamp=t!==undefined?t:new Date};n.exports=i});

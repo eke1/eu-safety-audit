@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>2E1612F3-5781-4AC1-9750-969DF85835DB</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SafetyAudit</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>1E1F2E1359A05777E39C3777AA73F5A56D690D14</key>
+		<string>https://bitbucket.org/peterharris/eu-poc.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>platforms/ios/SafetyAudit.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>1E1F2E1359A05777E39C3777AA73F5A56D690D14</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://bitbucket.org/peterharris/eu-poc.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>1E1F2E1359A05777E39C3777AA73F5A56D690D14</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1E1F2E1359A05777E39C3777AA73F5A56D690D14</string>
+			<key>IDESourceControlWCCName</key>
+			<string>eu-poc</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,1 @@
+cordova.define("org.apache.cordova.core.file.FileSystem",function(e,t,n){var r=e("./DirectoryEntry"),i=function(e,t){this.name=e||null;t&&(this.root=new r(t.name,t.fullPath))};n.exports=i});

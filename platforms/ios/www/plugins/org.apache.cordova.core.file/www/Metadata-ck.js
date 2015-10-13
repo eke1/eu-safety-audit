@@ -1,0 +1,1 @@
+cordova.define("org.apache.cordova.core.file.Metadata",function(e,t,n){var r=function(e){this.modificationTime=typeof e!="undefined"?new Date(e):null};n.exports=r});

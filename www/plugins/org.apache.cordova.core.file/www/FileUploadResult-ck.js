@@ -1,0 +1,1 @@
+cordova.define("org.apache.cordova.core.file.FileUploadResult",function(e,t,n){var r=function(){this.bytesSent=0;this.responseCode=null;this.response=null};n.exports=r});

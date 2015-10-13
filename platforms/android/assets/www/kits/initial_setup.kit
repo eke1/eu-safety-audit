@@ -1,0 +1,86 @@
+<!-- $pagetitle: Initial Setup -->
+<!-- @import "header.kit" -->
+<!-- @import "bootstrap-menu.kit" -->
+
+
+
+<h1>Initial Setup</h1>
+
+
+<div class='cache_progress'>
+
+	<h3>Please wait while the app downloads offline sync records</h3>
+
+	<h2>Cache Update Progress</h2>
+	<div class="progress ">
+		<div class="progress-bar"  role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="cache_update_status">
+			<span>0% Complete</span>
+		</div>
+	</div>
+
+	<h3>Active Requests</h3>
+	<table id="active_requests" class='table table-condensed'>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+</div>
+
+
+
+<div id="success_screen" style='display:none;'>
+	<div class="jumbotron">
+		<h1 style='color:green'><span class='glyphicon glyphicon-ok' ></span> <span id="success_screen_text">Cache Synced</span></h1>
+	
+		<h3>What next?</h3>
+
+		<div class='row' style='margin-bottom:40px;margin-top:40px;'>
+			<div class='col-md-6 col-sm-6'>
+				<a class='btn btn-primary btn-block' href="bootstrap-form.html">New Safety Audit</a>
+			</div>
+			<div class='col-md-6 col-sm-6'>
+				<a class='btn btn-primary btn-block' href="bootstrap-form.html?type=peertopeer">New Peer to Peer Observation</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+</article>
+</div>
+
+<!-- @import "footer.kit" -->
+<script src="js/offline_cache_sync.js"></script>
+<script>
+var facilities;
+var totalUpdateJobs = 0;
+var completedJobs = 0;
+$(function(){
+
+	facilities = [
+		{"code": "CED", "displayname": "ComEd"},
+		{"code": "PDS", "displayname": "PECO"},
+		{"code": "BSC", "displayname": "BSC"},
+		{"code": "BGE", "displayname": "BGE"},
+	]
+
+	updateSyncCounts();
+
+	FastClick.attach(document.body);
+
+
+	update_cached_data(function(){
+		localStorage.initialSetupComplete  = true;
+		// sync complete
+		$(".cache_progress").hide();
+		$("#success_screen").show();
+	});
+});
+
+
+</script>

@@ -1,0 +1,1 @@
+cordova.define("org.apache.cordova.core.file.ProgressEvent",function(e,t,n){var r=function(){return function(t,n){this.type=t;this.bubbles=!1;this.cancelBubble=!1;this.cancelable=!1;this.lengthComputable=!1;this.loaded=n&&n.loaded?n.loaded:0;this.total=n&&n.total?n.total:0;this.target=n&&n.target?n.target:null}}();n.exports=r});

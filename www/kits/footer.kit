@@ -1,0 +1,57 @@
+
+
+<!-- Modal -->
+<div class="modal fade" id="quickLogin" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Login</h4>
+      </div>
+      <div class="modal-body">
+        
+
+        <p id="quick_login_reason"></p>
+
+	    <p id="quick_login_statement">Please use Layer 7 credentials</p>
+
+	    <input type="text" name="quick_login_username" id="quick_login_username" class="form-control" value="" required="required" title="" placeholder='Username' required>
+
+	    <input type="password" name="quick_login_password" id="quick_login_password" class="form-control" value="" required="required" title="" placeholder='Password' required>
+
+	    <button class="btn btn-primary btn-lg btn-block" id='quick_login_loginbutton' value='Login' data-loading-text=" <span class='glyphicon glyphicon-refresh fa-spin'></span> Logging in..." />Login</button>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class='tinyalert' id="draftAlert">
+	Saving Draft
+</div>
+<div class='tinyalert' id="loadingFromServer">
+	Saving Draft
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
+<script src="bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
+<script src="bower_components/momentjs/moment.js"></script>
+<script src="bower_components/hammerjs/hammer.min.js"></script>
+
+<script src="js/handlebars.js"></script>
+<script src="js/jquery.validate.js"></script>
+<script src="js/jquery.validate.bootstrap.js"></script>
+<script src="js/drafts-db.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/ImageMetaDataReader.js"></script>
+<script src="js/menu.js"></script>

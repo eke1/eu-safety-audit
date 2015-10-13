@@ -1,0 +1,96 @@
+<!-- $pagetitle: Safety Audit Login -->
+<!-- @import "header.kit" -->
+<!-- @import "bootstrap-menu.kit" -->
+<style>
+input.form-control{
+	margin: 20px 0px;
+}
+</style>
+<script>
+delete(localStorage.oauthtoken);
+</script>
+<div class="container theme-showcase">
+<form action="testing" method="POST" role="form" onsubmit="return false;">
+	<div class="jumbotron" id='loginbox'>
+	  <div class="container">
+	    <h2>Login</h2>
+
+	    <p id='login_statement'></p>
+	    <p id="loginerror">Login failed, please try again</p>
+	    <input type="text" name="username" id="username" class="form-control" value="" required="required" title="" placeholder='Username' required autocorrect="off">
+
+	    <input type="password" name="password" id="password" class="form-control" value="" required="required" title="" placeholder='Password' required>
+
+	    <button class="btn btn-primary btn-lg btn-block" id='loginbutton' value='Login' data-loading-text=" <span class='glyphicon glyphicon-refresh fa-spin'></span> Logging in..." />Login</button>
+
+	    <a class="btn btn-default btn-block " href="bootstrap-form.html?type=peertopeer" style='margin-top:25px'>Work Offline</a>
+
+
+	  </div>
+
+
+	</div>
+
+
+</form>
+
+<p>If you have not been migrated to Exelon DS yet and need a Layer 7 account, or run into any other issues, please contact the "iPad Safety App" group at <a href="mailto:iPadSafetyApp@exeloncorp.com">iPadSafetyApp@exeloncorp.com</a></p>
+</div> <!-- /container -->
+
+
+
+
+</article>
+</div>
+
+<!-- @import "footer.kit" -->
+
+<script>
+$(function(){
+	$("#loginerror").hide();
+	$("#loginbutton").click(function(){
+		if($("#username").val() != undefined && $("#username").val().length > 0 && $("#password").val() != undefined && $("#password").val().length > 0 ){
+			$("#loginerror").hide();
+			$(this).button('loading');
+			loginHandler.login({
+				username: $("#username").val(), 
+				password: $("#password").val(),
+				success: function(){
+					if(localStorage.initialSetupComplete == "true")
+						window.location.href = "bootstrap-form.html?type=peertopeer";
+					else
+						window.location.href = "initial_setup.html";
+				},
+				error: function(xhr, textStatus, errorThrown){
+					$("#loginbutton").button('reset');					
+
+					if (xhr == null) {
+						$("#loginerror").fadeIn().text(textStatus);
+					} else if (xhr.status >= 200 && xhr.status < 402) {
+						$("#loginerror").fadeIn().text('Login failed, please check the username and password');
+					} else {
+						$("#loginerror").fadeIn().text('No connection to the server! You may proceed to work offline, but you will not be able to submit until the server is accessible again.');
+					}
+					// alert("Login Failed! If you are in the G&E building, you may need to turn off Wi-Fi on your device.");
+				}
+			});
+		}
+		else{
+			console.log('failed validation');
+		}
+	});
+	
+	if(services.getSelectedLoginEndpoint() == "L7 Internal Store" || services.getSelectedLoginEndpoint() == "Production" )
+		$("#login_statement").text("Please use your Exelon DS user ID & password, or a Layer 7 account");
+	else if(services.getSelectedLoginEndpoint() == "Exelon DS")
+		$("#login_statement").text("Please use your Exelon DS login (E or C number)");
+
+
+	FastClick.attach(document.body);
+
+});
+</script>
+
+
+</body>
+</html>
