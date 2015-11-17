@@ -15,7 +15,6 @@ function addSelectedTasks(){
 	$("input.worktask-lookup:checked").each(function(){
 		// Stored as an object to avoid duplication
 		workTasksSelected[$(this).attr('data-taskcode')] = {TaskCode: $(this).attr('data-taskcode'), TaskName: $(this).attr('data-taskname')};
-
 	});
 
 	$(".worktask-selected-row").remove();
@@ -24,6 +23,8 @@ function addSelectedTasks(){
 	$("#worktask-selected-tbody").append(
 		workTaskSelectedTemplate({tasks: workTasksSelected})
 	);
+
+	$('#work_task_checker').valid();
 }
 function removeTask(taskCode){
 	delete workTasksSelected[taskCode];
@@ -36,6 +37,8 @@ function removeTask(taskCode){
 	if($("#worktask-selected-tbody tr").length <= 1){
 		$("#worktask-nothing-selected").show();
 	}
+
+	$('#work_task_checker').valid();
 }
 
 // Used on the 4 middle tabs
@@ -121,12 +124,47 @@ $(function(){
 		onkeyup: false,
 		onblur: false,
 		focusInvalid: false,
+		// errorPlacement: function(error, element){
+		// 	if ($(element).is('#work_task_checker')) {
+		// 		var pop = $('#lookup-work-tasks-button').popover({
+		// 			trigger: 'manual',
+		// 			content: 'A work task is required',
+		// 			placement: 'bottom'
+		// 		}).show();
+		// 		pop.popover('show');
+		// 	}
+		// 	else if ($(element).is('#weather_checker')) {
+		// 		var pop = $('#weather_checker').prev().popover({
+		// 			trigger: 'manual',
+		// 			content: 'A work task is required',
+		// 			placement: 'bottom'
+		// 		}).show();
+		// 		pop.popover('show');
+		// 	}
+		// 	else return true;
+		// },
+		rules: {
+			"work_task_checker": {
+				required: function() {
+					return !$('#worktask-selected-tbody .worktask-selected-row input:hidden').length;
+				}
+			},
+			"weather_checker": {
+				required: function() {
+					return !$('.weather-conditions-group :checkbox:checked').length;
+				}
+			}
+		},
+		messages: {
+			work_task_checker: "Please select at least one work task",
+			weather_checker: "Please check at least one weather condition",
+
+		},
 		submitHandler: function() {
 			submitAuditForm();
 		},
 		ignore: ".checkbox-row, .temp_ignore",
 		invalidHandler: function(form, validator) {
-
 			if (!validator.numberOfInvalids())
 				return;
 
@@ -144,12 +182,10 @@ $(function(){
 				$('html, body').animate({scrollTop: $(validator.errorList[0].element).offset().top-150}, 1000);
 			}
 			console.error(validator.errorList);
-
 		}
 	});
 
-
-	
+	$('.weather-conditions-group :checkbox').click(function(){$('#weather_checker').valid()});
 
 	$('input[name="ShiftId"]').rules("add", "required");
 	
@@ -160,6 +196,12 @@ $(function(){
 
 		$(".tab-pane:not(.active) input, .tab-pane:not(.active) textarea, .tab-pane:not(.active) select").not(".checkbox-row").addClass("temp_ignore");
 
+
+			// $("WorkTasks[]").rules('remove');
+			// $("WorkTasks[]").rules('add', {
+			// 	required: true,
+			// 	minlength: 2
+			// });
 		if(main_form_validation.form()){
 			$("#form_tabs li.active").next().find('a').tab('show');
 
@@ -757,11 +799,8 @@ $(function(){
 				else{
 					// $("input[name='" + $(this).children('input').attr('name') + "']");
 					$("input[name='" + $(this).children('input').attr('name') + "_comment']").prop('disabled', false);
-					if($(this).children('input').val() == "Below")
-						$("input[name='" + $(this).children('input').attr('name') + "_comment']").prop('required', true);
-					else
-						$("input[name='" + $(this).children('input').attr('name') + "_comment']").prop('required', false);
-
+					var required = $(this).children('input').val() != "Meets"
+					$("input[name='" + $(this).children('input').attr('name') + "_comment']").prop('required', required);
 
 					// Bug fix to prevent double click firing event from fastclick
 					// $(this).children('input').addClass('needsclick');
@@ -1296,7 +1335,7 @@ function loadJSONFormObject(formObject){
 			$(selector).click().parent().addClass('active');
 			$(comment_selector).prop('disabled', false).val(data[i].TCComments);
 
-			if(data[i].TCRank == "Below")
+			if(data[i].TCRank == "Below" || data[i].TCRank == "Exceeds")
 				$(comment_selector).prop('required', true);
 			console.log(data[i]);
 			// console.log(selector);
