@@ -106,7 +106,21 @@ $(function(){
 		formTabs = tab_layouts;
 		$(".peer_to_peer_only").hide();
 	}
+	$('.comed_only').hide();
 
+	$.validator.addMethod("maxDate", function(value, element, params) {
+		if(typeof params === "string")
+			var today = new Date(params);
+		else
+			var today = new Date();
+		var timePart = $(element).siblings('[type="time"]');
+		if(timePart.length)
+			value += " " + timePart.val();
+		var inputDate = new Date(value);
+		if(inputDate < today)
+			return true;
+		return false;
+	}, "Invalid date");
 
 	$.validator.addMethod("pageRequired", function(value, element) {
 		var $element = $(element)
@@ -124,26 +138,10 @@ $(function(){
 		onkeyup: false,
 		onblur: false,
 		focusInvalid: false,
-		// errorPlacement: function(error, element){
-		// 	if ($(element).is('#work_task_checker')) {
-		// 		var pop = $('#lookup-work-tasks-button').popover({
-		// 			trigger: 'manual',
-		// 			content: 'A work task is required',
-		// 			placement: 'bottom'
-		// 		}).show();
-		// 		pop.popover('show');
-		// 	}
-		// 	else if ($(element).is('#weather_checker')) {
-		// 		var pop = $('#weather_checker').prev().popover({
-		// 			trigger: 'manual',
-		// 			content: 'A work task is required',
-		// 			placement: 'bottom'
-		// 		}).show();
-		// 		pop.popover('show');
-		// 	}
-		// 	else return true;
-		// },
 		rules: {
+			"EventDate": {
+				maxDate: true
+			},
 			"work_task_checker": {
 				required: function() {
 					return !$('#worktask-selected-tbody .worktask-selected-row input:hidden').length;
@@ -293,6 +291,7 @@ $(function(){
 			change_function_selector += ", input[name='AuditeeStatus']";
 
 		$(change_function_selector).change(function(){
+			$('.comed_only').toggle(this.value == "CED");
 			
 			// Special case
 			// Used to bind auditee facility and auditor facility together by default
@@ -547,7 +546,7 @@ $(function(){
 
 	
 
-	$("#supervisor_of_auditee, #assignment_person, #auditor").typeahead({highlight:true},{
+	$("#supervisor_of_auditee, #auditee, #assignment_person, #auditor").typeahead({highlight:true},{
 			name: "employees",
 			source: employeeLookupEngine.ttAdapter()
 		}).bind('typeahead:selected', function(obj, datum) {
@@ -959,6 +958,13 @@ function buildJSONObject(){
 			"ContactType": $("#supervisor_of_auditee_type").val(),
 			"ContactUid": $("#supervisor_of_auditee_uid").val(),
 		}
+		savedForm.Auditee = {
+			// "__type": "Exelon.ManagementSafetyAudits.Services.ARContact",
+			"ContactEmpid": $("#auditee_empid").val(),
+			"ContactName": $("#auditee_name").val(),
+			"ContactType": $("#auditee_type").val(),
+			"ContactUid": $("#auditee_uid").val(),
+		}
 	}
 	if($("input[name='WorkTasks[]']").length > 0){
 		savedForm.WorkTasksX = $("input[name='WorkTasks[]']").map(function(){ return $(this).val() }).get();
@@ -1289,6 +1295,13 @@ function loadJSONFormObject(formObject){
 		$("#supervisor_of_auditee").val(formObject.SupervisorManagerX.ContactName);
 		$("#supervisor_of_auditee_type").val(formObject.SupervisorManagerX.ContactType);
 		$("#supervisor_of_auditee_uid").val(formObject.SupervisorManagerX.ContactUid);
+	}
+
+	if(formObject.Auditee){
+		$("#auditee_empid").val(formObject.Auditee.ContactEmpid);
+		$("#auditee_name").val(formObject.Auditee.ContactName);
+		$("#auditee_type").val(formObject.Auditee.ContactType);
+		$("#auditee_uid").val(formObject.Auditee.ContactUid);
 	}
 
 	$("#org_number_auditee").val(formObject.org_number_auditee);

@@ -174,8 +174,8 @@ $(function() {
 	 		this._dragged_left = false;
 	 		this._ignore_drag = false;
 	 		this._is_open = false;
-	 		this.hammertime = Hammer(this.container)
-	 		.on("touch release dragright dragleft dragup dragdown", function(ev) {
+	 		this.hammertime = new Hammer(this.container);
+	 		this.hammertime.on("panend panright panleft", function(ev) {
 	 			self.handleHammer(ev);
 	 		});
 
@@ -191,6 +191,51 @@ $(function() {
 		 	var self = this;
 
 		 	switch(ev.type) {
+				/*// when we dragright
+				case 'swiperight':
+					// if dragleft has already been started for this gesture, don't process this.
+					if(this._is_open)
+						return;
+
+					// We only want the menu to come out if the user taps + drags in the left 20% of the screen
+					// Reduces accidental drags
+					if((ev.center.x - ev.deltaX)/window.innerWidth > .2)
+						return;
+
+					// no requestAnimationFrame instance is running, start one
+					if(!this._anim) {
+						$(this.slidebox).removeClass('haveanim');
+						this.updateOffset();
+					}
+
+					// stop browser scrolling
+					ev.preventDefault();
+
+					// update slidedown height
+					// it will be updated when requestAnimationFrame is called
+					this._slideright_offset = 300;
+					this._is_open = true;
+					console.log(this._anim, this._slideright_offset, ev.type);
+					break;
+				case 'swipeleft':
+					if(!this._is_open)
+						return;
+
+					if(!this._anim ) {
+						$(this.slidebox).removeClass('haveanim').removeClass('shownav');
+						this.updateOffset();
+					}
+
+					// stop browser scrolling
+					ev.preventDefault();
+
+					// update slidedown height
+					// it will be updated when requestAnimationFrame is called
+					this._slideright_offset = 0;
+					this._is_open = false;
+					console.log(this._anim, this._slideright_offset, ev.type);
+					
+					break;*/
 				// reset element on start
 				case 'touch':
 						// if(this._is_open)
@@ -198,7 +243,7 @@ $(function() {
 						break;
 
 				// on release we check how far we dragged
-				case 'release':
+				case 'panend':
 
 					if(!this._ignore_drag){
 
@@ -207,7 +252,7 @@ $(function() {
 						this._anim = null;
 						$(this.slidebox).addClass('haveanim');
 						// over the breakpoint, trigger the callback
-						if(ev.gesture.deltaX >= this.breakpoint) {
+						if(ev.deltaX >= this.breakpoint) {
 							// container_el.className = 'pullrefresh-loading';
 							// pullrefresh_icon_el.className = 'icon loading';
 
@@ -226,8 +271,8 @@ $(function() {
 							this.setOffset(null)
 							this.hide();
 							this._is_open = false;
-							ev.gesture.preventDefault();
-							ev.gesture.stopPropagation();
+							ev.preventDefault();
+							ev.stopPropagation();
 						}
 					}
 					this._dragged_left = false;
@@ -236,14 +281,14 @@ $(function() {
 					break;
 
 				// when we dragright
-				case 'dragright':
+				case 'panright':
 					// if dragleft has already been started for this gesture, don't process this.
 					if(this._dragged_left || this._ignore_drag)
 						return;
 
 					// We only want the menu to come out if the user taps + drags in the left 20% of the screen
 					// Reduces accidental drags
-					if(ev.gesture.srcEvent.pageX/window.innerWidth > .2 && !this._dragged_right){
+					if((ev.center.x - ev.deltaX)/window.innerWidth > .2 && !this._dragged_right){
 						this._ignore_drag = true;
 						return;
 					}
@@ -253,7 +298,7 @@ $(function() {
 
 					if(this._is_open){
 						// stop browser scrolling
-						ev.gesture.preventDefault();
+						ev.preventDefault();
 						return;
 					}
 
@@ -265,17 +310,17 @@ $(function() {
 					}
 
 					// stop browser scrolling
-					ev.gesture.preventDefault();
+					ev.preventDefault();
 
 					// update slidedown height
 					// it will be updated when requestAnimationFrame is called
-					this._slideright_offset = ev.gesture.deltaX;
+					this._slideright_offset = ev.deltaX;
 					if(this._slideright_offset > 300){
 						this._slideright_offset = 300;
 					}
-					console.log(this._anim, this._slideright_offset, ev.gesture);
+					console.log(this._anim, this._slideright_offset, ev.type);
 					break;
-				case 'dragleft':
+				case 'panleft':
 					// if dragright has already been started for this gesture, don't process this.
 					if(this._dragged_right || this._ignore_drag)
 						return;
@@ -294,24 +339,24 @@ $(function() {
 
 
 					// stop browser scrolling
-					ev.gesture.preventDefault();
+					ev.preventDefault();
 
 					// update slidedown height
 					// it will be updated when requestAnimationFrame is called
-					this._slideright_offset = 300+ev.gesture.deltaX;
+					this._slideright_offset = 300+ev.deltaX;
 					
 					if(this._slideright_offset < 0){
 						this._slideright_offset = 0;
 					}
-					console.log(this._anim, this._slideright_offset, ev.gesture);
+					console.log(this._anim, this._slideright_offset, ev.type);
 					
 					break;
 
-				case 'dragup':
+				case 'panup':
 					if(!this._dragged_right && !this._dragged_left)
 						this._ignore_drag = true;
 					break;
-				case 'dragdown':
+				case 'pandown':
 					if(!this._dragged_right && !this._dragged_left)
 						this._ignore_drag = true;
 					break;
@@ -331,23 +376,19 @@ $(function() {
 
 		 	}
 		 	else{
-		 		if(Modernizr.csstransforms3d) {
-		 			this.slidebox.style.transform = 'translate3d('+fixedoffset+'px,0,0) ';
-		 			this.slidebox.style.oTransform = 'translate3d('+fixedoffset+'px,0,0)';
-		 			this.slidebox.style.msTransform = 'translate3d('+fixedoffset+'px,0,0)';
-		 			this.slidebox.style.mozTransform = 'translate3d('+fixedoffset+'px,0,0)';
-		 			this.slidebox.style.webkitTransform = 'translate3d('+fixedoffset+'px,0,0) scale3d(1,1,1)';
-		 		}
-		 		else if(Modernizr.csstransforms) {
+		 		// if(Modernizr.csstransforms3d) {
+		 		// 	this.slidebox.style.transform = 'translate3d('+fixedoffset+'px,0,0) ';
+		 		// 	this.slidebox.style.oTransform = 'translate3d('+fixedoffset+'px,0,0)';
+		 		// 	this.slidebox.style.msTransform = 'translate3d('+fixedoffset+'px,0,0)';
+		 		// 	this.slidebox.style.mozTransform = 'translate3d('+fixedoffset+'px,0,0)';
+		 		// 	this.slidebox.style.webkitTransform = 'translate3d('+fixedoffset+'px,0,0) scale3d(1,1,1)';
+		 		// }
+		 		// else if(Modernizr.csstransforms) {
 		 			this.slidebox.style.transform = 'translate('+fixedoffset+'px,0) ';
-		 			this.slidebox.style.oTransform = 'translate('+fixedoffset+'px,0)';
-		 			this.slidebox.style.msTransform = 'translate('+fixedoffset+'px,0)';
-		 			this.slidebox.style.mozTransform = 'translate('+fixedoffset+'px,0)';
-		 			this.slidebox.style.webkitTransform = 'translate('+fixedoffset+'px,0)';
-		 		}
-		 		else {
-		 			this.slidebox.style.left = fixedoffset+"px";
-		 		}
+		 		// }
+		 		// else {
+		 		// 	this.slidebox.style.left = fixedoffset+"px";
+		 		// }
 		 	}
 		 };
 

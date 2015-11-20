@@ -245,21 +245,25 @@
 				<table class='table table-striped table-condensed'>
 					<thead>
 						<tr>
+							<input type="hidden" id="work_task_checker" name="work_task_checker" data-error-selector="#lookup-work-tasks-button"/>
 							<th>Primary Task</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody id='worktask-selected-tbody'>
 						<tr id='worktask-nothing-selected'>
-							<td>No tasks have been selected</td>
+							<td>
+								No tasks have been selected
+							</td>
 							<td></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 
-			<h3 class='section_header'>Weather Conditions</h3>
-
+			<h3 class='section_header weather_header'>Weather Conditions</h3>
+			
+			<input type="hidden" id="weather_checker" name="weather_checker" data-error-selector=".weather-conditions-group" />
 			<div class="row weather-conditions-group">
 				<div class="col-md-4  col-sm-4">
 					<div class="btn-group-vertical">

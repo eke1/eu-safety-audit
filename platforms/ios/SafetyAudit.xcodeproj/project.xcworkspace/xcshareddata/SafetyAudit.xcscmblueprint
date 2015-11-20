@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "CFD457AE11EC1217602037CA1FD3D2171662267D",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "1E1F2E1359A05777E39C3777AA73F5A56D690D14" : 0,
+    "CFD457AE11EC1217602037CA1FD3D2171662267D" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "2E1612F3-5781-4AC1-9750-969DF85835DB",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "1E1F2E1359A05777E39C3777AA73F5A56D690D14" : "eu-poc",
+    "CFD457AE11EC1217602037CA1FD3D2171662267D" : "eu-safety-audit\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "SafetyAudit",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "platforms\/ios\/SafetyAudit.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/bitbucket.org\/peterharris\/eu-poc.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "1E1F2E1359A05777E39C3777AA73F5A56D690D14"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/bitbucket.com\/sloaner\/eu-safety-audit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "CFD457AE11EC1217602037CA1FD3D2171662267D"
+    }
+  ]
+}

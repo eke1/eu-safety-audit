@@ -29,6 +29,9 @@ $.validator.setDefaults({
 		if($element.parent().hasClass('btn')){
 			$element.parent().popover('hide');
 		}
+		else if($element.data('error-selector')){
+			$($element.data('error-selector')).popover('hide');
+		}
 		else
 			$element.popover('hide');
 	},
@@ -36,12 +39,15 @@ $.validator.setDefaults({
 
 		$.each(this.successList, function (index, value) {
 			// console.log('hiding' + value)
+			$($(value.element).data('error-selector')).popover('hide');
 			$(value).popover('hide');
 		});
 
 		$.each(errorList, function (index, value) {
 			var target = value.element;
-			
+			var error_selector = $($(value.element).data('error-selector'));
+			if(error_selector.length)
+				target = error_selector;
 			if($(value.element).parent().hasClass('btn')){
 				target = $(value.element).parent();
 			}
