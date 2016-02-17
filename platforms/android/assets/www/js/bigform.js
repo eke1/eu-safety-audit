@@ -106,6 +106,7 @@ $(function(){
 		formTabs = tab_layouts;
 		$(".peer_to_peer_only").hide();
 	}
+	$('.comed_only').hide();
 
 	$.validator.addMethod("maxDate", function(value, element, params) {
 		if(typeof params === "string")
@@ -114,7 +115,7 @@ $(function(){
 			var today = new Date();
 		var timePart = $(element).siblings('[type="time"]');
 		if(timePart.length)
-			value += " " + timePart.val();
+			value += "T" + timePart.val();
 		var inputDate = new Date(value);
 		if(inputDate < today)
 			return true;
@@ -286,10 +287,13 @@ $(function(){
 	
 	function setupFacilityListener(facility_dropdown, department_dropdown, office_dropdown){
 		var change_function_selector = facility_dropdown;
-		if(facility_dropdown == "#ResponsibleDepartmentFacilityId")
+		if(facility_dropdown == "#ResponsibleDepartmentFacilityId") 
 			change_function_selector += ", input[name='AuditeeStatus']";
 
 		$(change_function_selector).change(function(){
+			if ($(this).is('#ResponsibleDepartmentFacilityId')) {
+				$('.comed_only').toggle(this.value == "CED");
+			}
 			
 			// Special case
 			// Used to bind auditee facility and auditor facility together by default
@@ -544,7 +548,7 @@ $(function(){
 
 	
 
-	$("#supervisor_of_auditee, #assignment_person, #auditor").typeahead({highlight:true},{
+	$("#supervisor_of_auditee, #auditee, #assignment_person, #auditor").typeahead({highlight:true},{
 			name: "employees",
 			source: employeeLookupEngine.ttAdapter()
 		}).bind('typeahead:selected', function(obj, datum) {
@@ -956,6 +960,13 @@ function buildJSONObject(){
 			"ContactType": $("#supervisor_of_auditee_type").val(),
 			"ContactUid": $("#supervisor_of_auditee_uid").val(),
 		}
+		savedForm.AuditeesX = {
+			// "__type": "Exelon.ManagementSafetyAudits.Services.ARContact",
+			"ContactEmpid": $("#auditee_empid").val(),
+			"ContactName": $("#auditee").val(),
+			"ContactType": "ADTE",
+			"ContactUid": $("#auditee_uid").val(),
+		}
 	}
 	if($("input[name='WorkTasks[]']").length > 0){
 		savedForm.WorkTasksX = $("input[name='WorkTasks[]']").map(function(){ return $(this).val() }).get();
@@ -1269,6 +1280,8 @@ function loadJSONFormObject(formObject){
 
 	$("#ReportingDepartmentFacilityId").val(formObject.ReportingDepartmentFacilityId);
 	$("#ResponsibleDepartmentFacilityId").val(formObject.ResponsibleDepartmentFacilityId);
+	if(formObject.ResponsibleDepartmentFacilityId == "CED")
+		$('.comed_only').show();
 
 	renderLocalStorageFacilityResults(localStorage.getObject('facilityResults' + formObject.ReportingDepartmentFacilityId + $("input[name='AuditeeStatus']:checked").val() + 'DepartmentResults'), $("#ReportingDepartmentId"));
 	renderLocalStorageFacilityResults(localStorage.getObject('facilityResults' + formObject.ResponsibleDepartmentFacilityId + $("input[name='AuditeeStatus']:checked").val() + 'DepartmentResults'), $("#ResponsibleDepartmentId"));
@@ -1286,6 +1299,13 @@ function loadJSONFormObject(formObject){
 		$("#supervisor_of_auditee").val(formObject.SupervisorManagerX.ContactName);
 		$("#supervisor_of_auditee_type").val(formObject.SupervisorManagerX.ContactType);
 		$("#supervisor_of_auditee_uid").val(formObject.SupervisorManagerX.ContactUid);
+	}
+
+	if(formObject.AuditeesX){
+		$("#auditee_empid").val(formObject.AuditeesX.ContactEmpid);
+		$("#auditee").val(formObject.AuditeesX.ContactName);
+		$("#auditee_type").val(formObject.AuditeesX.ContactType);
+		$("#auditee_uid").val(formObject.AuditeesX.ContactUid);
 	}
 
 	$("#org_number_auditee").val(formObject.org_number_auditee);

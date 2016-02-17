@@ -4,6 +4,18 @@ body {
   overflow-x:hidden;
 }
 
+#worktask-lookup-results .panel{
+  margin-bottom: 0;
+}
+
+#worktask-lookup-results .btn-group-vertical label.btn.btn-default {
+  margin: 0;
+}
+
+#worktask-lookup-results [data-toggle="buttons"] > .btn > input[type="checkbox"] {
+  display: inline-block;
+}
+
 .theme-dropdown .dropdown-menu {
 	display: block;
 	position: static;

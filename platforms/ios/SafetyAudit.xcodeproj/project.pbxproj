@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		0A005BDC04FA4572ADA4F13E /* CDVDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D80CD8F21EC49F194740154 /* CDVDevice.m */; };
 		1353042F2E7449E79186F148 /* CDVVibration.m in Sources */ = {isa = PBXBuildFile; fileRef = 44367B4E0D674310BDBF6EC9 /* CDVVibration.m */; };
@@ -556,6 +557,12 @@
 				GCC_PREFIX_HEADER = "SafetyAudit/SafetyAudit-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
+				HEADER_SEARCH_PATHS = (
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(BUILT_PRODUCTS_DIR)\"",
+					"\"$(OBJROOT)/UninstalledProducts/$(PLATFORM_NAME)/include\"",
+				);
 				INFOPLIST_FILE = "SafetyAudit/SafetyAudit-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = (
@@ -589,6 +596,12 @@
 				GCC_PREFIX_HEADER = "SafetyAudit/SafetyAudit-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
+				HEADER_SEARCH_PATHS = (
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(BUILT_PRODUCTS_DIR)\"",
+					"\"$(OBJROOT)/UninstalledProducts/$(PLATFORM_NAME)/include\"",
+				);
 				INFOPLIST_FILE = "SafetyAudit/SafetyAudit-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = (

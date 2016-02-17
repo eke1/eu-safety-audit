@@ -14,7 +14,7 @@ function addSelectedTasks(){
 
 	$("input.worktask-lookup:checked").each(function(){
 		// Stored as an object to avoid duplication
-		workTasksSelected[$(this).attr('data-taskcode')] = {TaskCode: $(this).attr('data-taskcode'), TaskName: $(this).attr('data-taskname')};
+		workTasksSelected[this.value] = {TaskCode: this.value, TaskName: $(this).attr('data-taskname')};
 	});
 
 	$(".worktask-selected-row").remove();
@@ -115,7 +115,7 @@ $(function(){
 			var today = new Date();
 		var timePart = $(element).siblings('[type="time"]');
 		if(timePart.length)
-			value += " " + timePart.val();
+			value += "T" + timePart.val();
 		var inputDate = new Date(value);
 		if(inputDate < today)
 			return true;
@@ -142,6 +142,11 @@ $(function(){
 			"EventDate": {
 				maxDate: true
 			},
+			"auditee": {
+				required: function() {
+					return !($('#ResponsibleDepartmentFacilityId').val() !== "CED" || $('#auditee').val().length);
+				}
+			},
 			"work_task_checker": {
 				required: function() {
 					return !$('#worktask-selected-tbody .worktask-selected-row input:hidden').length;
@@ -155,6 +160,7 @@ $(function(){
 		},
 		messages: {
 			work_task_checker: "Please select at least one work task",
+			auditee: "Please enter an employee's name, or E or C number.",
 			weather_checker: "Please check at least one weather condition",
 
 		},
@@ -218,6 +224,48 @@ $(function(){
 
 	workTaskLookupTemplate = Handlebars.compile($("#worktask-template").html());
 	workTaskSelectedTemplate = Handlebars.compile($("#worktask-selected-template").html());
+	
+	$("#lookup-work-tasks-button").click(function(){
+		if ($("#worktask-lookup-results").html().trim().length==0) {
+			var trendCodesCache = localStorage.getObject('trendCodes');
+			if(trendCodesCache){
+				$("#worktask-lookup-results").html(workTaskLookupTemplate({trendCodes:trendCodesCache["TK%"]}));
+			}
+			else{
+				$.ajax({
+					url: services.getSelectedL7Base() + "TrendCodesLookup",
+					type: 'POST',
+					headers: {
+						"Authorization" : "Bearer "+localStorage.oauthtoken,
+					},
+					data: JSON.stringify({ "type": "TK%" }),
+					contentType: "application/json; charset=utf-8",
+					dataType: 'JSON',
+					success: function(data){					
+						function parseTasks(tasks) {
+							var response = [];
+							$.each(tasks, function(i,task) {
+								var parsedTask = {"TaskName" : task.text, "TaskCode": task.code, "TaskChildren": null};
+								if(task.children !== null)
+									parsedTask.TaskChildren = parseTasks(task.children);
+								response.push(parsedTask);
+							});
+							return response;
+						}
+						$("#worktask-lookup-results").html(workTaskLookupTemplate({trendCodes: parseTasks(data.d)}));
+					},
+					error: function(data){
+						if(data.status == 401){
+							$("#quick_login_reason").text("Your login may have expired, please reenter your login details to continue");
+							quickLogin();
+						}
+						else{
+						}
+					}
+				});
+			}
+		}
+	})
 
 	$("#functional_task_grouping").change(function(){
 
@@ -233,7 +281,7 @@ $(function(){
 		$("#functional_task_grouping").addClass('loading');
 		var workTaskCache = localStorage.getObject('workTasks');
 		if(workTaskCache && workTaskCache[$(this).val()]){
-			var splitColumns = split(workTaskCache[$(this).val()], 4);
+			var splitColumns = split(workTaskCache[$(this).val()], 1);
 			$("#worktask-lookup-results").html(workTaskLookupTemplate({columns: splitColumns}));
 			$("#functional_task_grouping").removeClass('loading');
 		}
@@ -242,7 +290,6 @@ $(function(){
 				url: services.getSelectedL7Base() + "TaskLookup?query",
 				type: 'POST',
 				headers: {
-					// "cache-control": "no-cache",
 					"Authorization" : "Bearer "+localStorage.oauthtoken,
 				},
 				data: JSON.stringify({ "type": $(this).val() }),
@@ -254,7 +301,7 @@ $(function(){
 					
 					
 
-					var splitColumns = split(data.d, 4);
+					var splitColumns = split(data.d, 1);
 					$("#worktask-lookup-results").html(workTaskLookupTemplate({columns: splitColumns}));
 				},
 				error: function(data){
@@ -287,11 +334,13 @@ $(function(){
 	
 	function setupFacilityListener(facility_dropdown, department_dropdown, office_dropdown){
 		var change_function_selector = facility_dropdown;
-		if(facility_dropdown == "#ResponsibleDepartmentFacilityId")
+		if(facility_dropdown == "#ResponsibleDepartmentFacilityId") 
 			change_function_selector += ", input[name='AuditeeStatus']";
 
 		$(change_function_selector).change(function(){
-			$('.comed_only').toggle(this.value == "CED");
+			if ($(this).is('#ResponsibleDepartmentFacilityId')) {
+				$('.comed_only').toggle(this.value == "CED");
+			}
 			
 			// Special case
 			// Used to bind auditee facility and auditor facility together by default
@@ -958,16 +1007,20 @@ function buildJSONObject(){
 			"ContactType": $("#supervisor_of_auditee_type").val(),
 			"ContactUid": $("#supervisor_of_auditee_uid").val(),
 		}
-		savedForm.Auditee = {
+		savedForm.AuditeesX = {
 			// "__type": "Exelon.ManagementSafetyAudits.Services.ARContact",
 			"ContactEmpid": $("#auditee_empid").val(),
-			"ContactName": $("#auditee_name").val(),
-			"ContactType": $("#auditee_type").val(),
+			"ContactName": $("#auditee").val(),
+			"ContactType": "ADTE",
 			"ContactUid": $("#auditee_uid").val(),
 		}
 	}
 	if($("input[name='WorkTasks[]']").length > 0){
-		savedForm.WorkTasksX = $("input[name='WorkTasks[]']").map(function(){ return $(this).val() }).get();
+		//savedForm.WorkTasksX = $("input[name='WorkTasks[]']").map(function(){ return $(this).val() }).get();
+		savedForm.WorkTaskToolsX = $("input[name='WorkTasks[]']").map(function(){ 
+			var code= $(this).val().split('/');
+			return { TCLevel1: code[0], TCLevel2: code[1], TCLevel3: code[2] };
+		}).get();
 	}
 	if($("#vendor_name").val() != null && $("#vendor_name").val().length > 0){
 		savedForm.VendorIssue = {
@@ -1278,6 +1331,8 @@ function loadJSONFormObject(formObject){
 
 	$("#ReportingDepartmentFacilityId").val(formObject.ReportingDepartmentFacilityId);
 	$("#ResponsibleDepartmentFacilityId").val(formObject.ResponsibleDepartmentFacilityId);
+	if(formObject.ResponsibleDepartmentFacilityId == "CED")
+		$('.comed_only').show();
 
 	renderLocalStorageFacilityResults(localStorage.getObject('facilityResults' + formObject.ReportingDepartmentFacilityId + $("input[name='AuditeeStatus']:checked").val() + 'DepartmentResults'), $("#ReportingDepartmentId"));
 	renderLocalStorageFacilityResults(localStorage.getObject('facilityResults' + formObject.ResponsibleDepartmentFacilityId + $("input[name='AuditeeStatus']:checked").val() + 'DepartmentResults'), $("#ResponsibleDepartmentId"));
@@ -1297,11 +1352,11 @@ function loadJSONFormObject(formObject){
 		$("#supervisor_of_auditee_uid").val(formObject.SupervisorManagerX.ContactUid);
 	}
 
-	if(formObject.Auditee){
-		$("#auditee_empid").val(formObject.Auditee.ContactEmpid);
-		$("#auditee_name").val(formObject.Auditee.ContactName);
-		$("#auditee_type").val(formObject.Auditee.ContactType);
-		$("#auditee_uid").val(formObject.Auditee.ContactUid);
+	if(formObject.AuditeesX){
+		$("#auditee_empid").val(formObject.AuditeesX.ContactEmpid);
+		$("#auditee").val(formObject.AuditeesX.ContactName);
+		$("#auditee_type").val(formObject.AuditeesX.ContactType);
+		$("#auditee_uid").val(formObject.AuditeesX.ContactUid);
 	}
 
 	$("#org_number_auditee").val(formObject.org_number_auditee);

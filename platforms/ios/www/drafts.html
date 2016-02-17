@@ -233,8 +233,8 @@ var SwipeToDelete = (function() {
 		this._ignore_drag = false;
 		this._is_open = false;
 		// console.log(this.element);
-		this.hammertime = Hammer(this.element)
-		.on("touch dragright dragleft dragup dragdown release", function(ev) {
+		this.hammertime = new Hammer(this.element);
+		this.hammertime.on("swipeleft swiperight", function(ev) {
 			self.handleHammer(ev);
 		});
 	};
@@ -248,153 +248,22 @@ var SwipeToDelete = (function() {
 		var self = this;
 
 		switch(ev.type) {
-			// reset element on start
-			case 'touch':
-					// if(this._is_open)
-					// this.hide();
-					break;
-
-			// on release we check how far we dragged
-			case 'release':
-				
-				if(!this._ignore_drag){
-
-					// cancel animation
-					cancelAnimationFrame(this._anim);
-					this._anim = null;
-					$(this.element).addClass('haveanim');
-					// over the breakpoint, trigger the callback
-					if(ev.gesture.deltaX*-1 >= this.breakpoint) {
-							// container_el.className = 'pullrefresh-loading';
-							// pullrefresh_icon_el.className = 'icon loading';
-
-							console.log("Setting it to open");
-							// this.setOffset(300);
-							this.setOffset(null);
-							$(this.element).addClass('showdelete');
-							
-							this._is_open = true;
-							// this.handler.call(this);
-							ev.stopPropagation();
-							ev.gesture.stopPropagation();
-						}
-					// just hide it
-					else if($(this.element).hasClass('showdelete')) {
-						// pullrefresh_el.className = 'slideup';
-						// container_el.className = 'pullrefresh-slideup';
-						$(this.element).removeClass('showdelete');
-						$(this.element).attr('data-block-click', 'true');
-						setTimeout("$('.row[data-draftid=\"" + $(this.element).parent().attr('data-draftid') + "\"]').find('.moveable').attr('data-block-click', 'false')", 100);
-						this.setOffset(null)
-						this.hide();
-						this._is_open = false;
-						ev.gesture.preventDefault();
-						ev.stopPropagation();
-						ev.gesture.stopPropagation();
-					}
-					else{
-						this.setOffset(null)
-						this.hide();
-						this._is_open = false;
-						ev.gesture.preventDefault();
-						ev.stopPropagation();
-						ev.gesture.stopPropagation();
-					}
-				}
-				
-
-				this._dragged_left = false;
-				this._dragged_right = false;
-				this._ignore_drag = false;
-				console.log(ev);
-			break;
-
-			// when we dragright
-			case 'dragright':
-				// if dragleft has already been started for this gesture, don't process this.
-				if(this._dragged_left || this._ignore_drag)
-					return;
-				this._dragged_right = true;
-				this._dragged_left = false;
-
-				if(!this._is_open){
-					// stop browser scrolling
-					// ev.gesture.preventDefault();
-					this._ignore_drag = true;
-					return;
-				}
-
-				// if we are not at the top move down
-				// var scrollY = window.scrollY;
-				// if(scrollY > 5) {
-				//     return;
-				// } else if(scrollY !== 0) {
-				//     window.scrollTo(0,0);
-				// }
-
-				// no requestAnimationFrame instance is running, start one
-				if(!this._anim) {
-					$(this.element).removeClass('haveanim');
-					this.updateOffset();
-				}
-
-				// stop browser scrolling
-				ev.gesture.preventDefault();
-				ev.stopPropagation();
-				ev.gesture.stopPropagation();
-
-				// update slidedown height
-				// it will be updated when requestAnimationFrame is called
-				this._slideright_offset = -100+ev.gesture.deltaX;
-				if(this._slideright_offset > 0){
-					this._slideright_offset = 0;
-				}
-				// console.log(this._anim, this._slideright_offset);
-				break;
-			case 'dragleft':
-				// if dragright has already been started for this gesture, don't process this.
-				if(this._dragged_right || this._ignore_drag)
-					return;
-
-				if(this._is_open || MainMenu._is_open){
-					// ev.gesture.preventDefault();
-					this._ignore_drag = true;
-					return;
-				}
-				this._dragged_left = true;
-				this._dragged_right = false;
-			
-
-				if(!this._anim	) {
-					$(this.element).removeClass('haveanim').removeClass('showdelete');
-					this.updateOffset();
-				}
-
+			case "swipeleft":
+					this.setOffset(null);
+					$(this.element).addClass('showdelete');
 					
-				// stop browser scrolling
-				ev.gesture.preventDefault();
-				ev.gesture.stopPropagation();
-				ev.stopPropagation();
-				// update slidedown height
-				// it will be updated when requestAnimationFrame is called
-				this._slideright_offset = ev.gesture.deltaX;
-				
-				if(this._slideright_offset < -200){
-					this._slideright_offset = -200;
+					this._is_open = true;
+					break;
+			case "swiperight":
+				if($(this.element).hasClass('showdelete')) {
+					$(this.element).removeClass('showdelete');
+					$(this.element).attr('data-block-click', 'true');
+					setTimeout("$('.row[data-draftid=\"" + $(this.element).parent().attr('data-draftid') + "\"]').find('.moveable').attr('data-block-click', 'false')", 100);
+					this.setOffset(null)
+					this.hide();
+					this._is_open = false;
 				}
-				// console.log(this._anim, this._slideright_offset);
-				
 				break;
-			
-			case 'dragup':
-				if(!this._dragged_right && !this._dragged_left)
-					this._ignore_drag = true;
-				break;
-			case 'dragdown':
-				if(!this._dragged_right && !this._dragged_left)
-					this._ignore_drag = true;
-				break;
-			
 			}
 		};
 

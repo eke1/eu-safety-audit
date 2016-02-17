@@ -70,6 +70,21 @@
 						<input type='hidden' name='supervisor_of_auditee_type' id='supervisor_of_auditee_type' />
 						<input type='hidden' name='supervisor_of_auditee_uid' id='supervisor_of_auditee_uid' />
 					</div>
+
+					<div class='safety_audit_only comed_only'>
+						<label class='control-label' for='auditee'>Auditee</label>
+						<div class="input-group">
+							<input type="text" name="auditee" id="auditee" class="form-control" value="" required="required" title="Please enter an employee's name, or E or C number.">
+							<span class="input-group-btn">
+								<button class="btn btn-default btn-clear-textfield-typeahead" type="button">
+									<span class='glyphicon glyphicon-remove'></span>
+								</button>
+							</span>
+						</div>
+						<input type='hidden' name='auditee_empid' id='auditee_empid' />
+						<input type='hidden' name='auditee_type' id='auditee_type' />
+						<input type='hidden' name='auditee_uid' id='auditee_uid' />
+					</div>
 					<!-- <div class='peer_to_peer_only'>
 						<label class='control-label' for='org_number_auditee'>Organization Number of Auditee</label>
 						

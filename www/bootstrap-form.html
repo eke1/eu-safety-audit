@@ -125,9 +125,9 @@
 					</div>
 
 					<div class='safety_audit_only comed_only'>
-						<label class='control-label' for='auditee_name'>Auditee</label>
+						<label class='control-label' for='auditee'>Auditee</label>
 						<div class="input-group">
-							<input type="text" name="auditee_name" id="auditee_name" class="form-control" value="" required="required" title="Please enter an employee's name, or E or C number.">
+							<input type="text" name="auditee" id="auditee" class="form-control" value="">
 							<span class="input-group-btn">
 								<button class="btn btn-default btn-clear-textfield-typeahead" type="button">
 									<span class='glyphicon glyphicon-remove'></span>
@@ -656,38 +656,7 @@
 				<h4 class="modal-title" id="worktasks-lookup-modal-label">Add Primary Work Tasks</h4>
 			</div>
 			<div class="modal-body">
-				<label class='control-label' for="functional_task_grouping" class="select">Functional Task Grouping</label>
-				<select class="form-control" id="functional_task_grouping" name="functional_task_grouping">
-					<option value="" disabled selected>(Select)</option>
-					<option value="AISP">AISP</option>
-					<option value="BGE DSO/TSO">BGE DSO/TSO</option>
-					<option value="C&amp;M ComEd OH">C&amp;M ComEd OH</option>
-					<option value="C&amp;M ComEd UG">C&amp;M ComEd UG</option>
-					<option value="C&amp;M Overhead BGE">C&amp;M Overhead BGE</option>
-					<option value="C&amp;M PECO Aerial">C&amp;M PECO Aerial</option>
-					<option value="C&amp;M PECO UG">C&amp;M PECO UG</option>
-					<option value="C&amp;M Underground BGE">C&amp;M Underground BGE</option>
-					<option value="Common Tasks">Common Tasks</option>
-					<option value="Contractors">Contractors</option>
-					<option value="DSO">DSO</option>
-					<option value="Engineering">Engineering</option>
-					<option value="Field and Meter Services">Field and Meter Services</option>
-					<option value="Fleet">Fleet</option>
-					<option value="Gas BGE">Gas BGE</option>
-					<option value="Gas PECO">Gas PECO</option>
-					<option value="Meter Reading">Meter Reading</option>
-					<option value="OCC/TSO">OCC/TSO</option>
-					<option value="Performance Assessment group">Performance Assessment group</option>
-					<option value="SSG">SSG</option>
-					<option value="SUPPLY">SUPPLY</option>
-					<option value="Safety">Safety</option>
-					<option value="T&amp;S">T&amp;S</option>
-					<option value="Training">Training</option>
-					<option value="Work Management">Work Management</option>
-				</select>
-
-				<div id='worktask-lookup-results'>
-				
+				<div id='worktask-lookup-results'>				
 				</div>
 			</div>
 			<div class="modal-footer">
@@ -814,8 +783,52 @@
 {{/each}}
 </script>
 
+<script id='worktask-template' type="text/x-handlebars-template">
+<div class="panel-group">
+{{#each trendCodes}}
+<div class="panel panel-default">
+	<div class="panel-heading"  data-toggle="collapse" data-target="#trend_{{TaskCode}}">
+		<div class='row'>
+			<div class="col-xs-12">
+				<h4 class="panel-title"><span class='glyphicon glyphicon-plus-sign'></span> {{TaskName}}</h4>
+			</div>
+		</div>
+	</div>
+	<div id="trend_{{TaskCode}}" class="panel-collapse collapse">
+		<div class="panel-body">
+			{{#each TaskChildren}}
+			<div class="panel panel-default">
+				<div class="panel-heading"  data-toggle="collapse" data-target="#trend_{{../TaskCode}}_{{TaskCode}}">
+					<div class='row'>
+						<div class="col-xs-12">
+							<h4 class="panel-title"><span class='glyphicon glyphicon-plus-sign'></span> {{TaskName}}</h4>
+						</div>
+					</div>
+				</div>
+				<div id="trend_{{../TaskCode}}_{{TaskCode}}" class="panel-collapse collapse">
+					<div class="panel-body">
+						<div class="btn-group-vertical" data-toggle="buttons">
+							{{#each TaskChildren}}
+							<label class="btn btn-default">
+								<input type="checkbox" class="worktask-lookup" name="worktask-lookup[]" data-taskname="{{../../TaskName}} - {{TaskName}}" value="{{../../TaskCode}}/{{../TaskCode}}/{{TaskCode}}">
+								{{../TaskCode}}{{TaskCode}} - {{TaskName}}
+							</label>
+							{{/each}}
+						</div>
+					</div>
+				</div>
+			</div>
+			{{/each}}
+		</div>
+	</div>
+</div>
+{{/each}}
+</div>
+</script>
+
+<!--
 <script id="worktask-template" type="text/x-handlebars-template">
-<div class='row'>
+<div class='row testy'>
 	{{#each columns}}
 		<div class="col-md-3 col-sm-6">
 			<div class="btn-group-vertical">
@@ -830,13 +843,13 @@
 	{{/each}}
 </div>
 </script>
+-->
 
 <script id="worktask-selected-template" type="text/x-handlebars-template">
-
 	{{#each tasks}}
 		<tr class='worktask-selected-row'>
 			<td>
-				<input type='hidden' name='WorkTasks[]' value="{{this.TaskName}}">
+				<input type='hidden' name='WorkTasks[]' value="{{this.TaskCode}}">
 				{{this.TaskName}}
 			</td>
 			<td>

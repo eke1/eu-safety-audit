@@ -14,6 +14,11 @@ function updateSyncCounts(){
 		$("#work_tasks_sync_count").text(Object.keys(localStorage.getObject('workTasks')).length);
 	else
 		$("#work_tasks_sync_count").text(0);
+	
+	if(localStorage.getObject('trendCodes'))
+		$("#trend_codes_sync_count").text(localStorage.getObject('trendCodes')["TK%"].length);
+	else
+		$("#trend_codes_sync_count").text(0);
 
 	$("#facility_departments_synced tbody").html("");
 	for(i = 0; i < facilities.length; i++){
@@ -38,6 +43,7 @@ function updateSyncCounts(){
 function clear_cached_data(){
 	localStorage.setObject('employeeCache', null);
 	localStorage.setObject('vendorCache', null);
+	localStorage.setObject('trendCodes', null);
 
 	for(i = 0; i < facilities.length; i++){
 		facility = facilities[i];
@@ -65,11 +71,14 @@ var departmentQueue = $({});
 var employeeQueue = $({});
 var vendorQueue = $({});
 var workTaskQueue = $({});
+var trendCodesQueue = $({});
 
 var existingCache = localStorage.getObject('employeeCache');
 var existingWorkTaskCache = localStorage.getObject('workTasks');
+var existingTrendCodesCache = localStorage.getObject('trendCodes');
 
 var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+var trendCodeCategories = [	"TK%" ];
 var workTaskCategories = [
 	"AISP",
 	"BGE DSO/TSO",
@@ -127,6 +136,8 @@ $.ajaxQueue = function( queueName, ajaxOpts ) {
    		vendorQueue.queue(queuedFunction);
    	else if(queueName == "workTask")
    		workTaskQueue.queue(queuedFunction)
+   	else if(queueName == "trendCodes")
+   		trendCodesQueue.queue(queuedFunction)
 
 };
 
@@ -140,7 +151,7 @@ function update_cached_data(callback){
 	}
 
 	completedJobs = 0;
-	totalUpdateJobs = facilities.length*3 + alphabet.length + workTaskCategories.length;
+	totalUpdateJobs = facilities.length*3 + alphabet.length + trendCodeCategories.length;
 	$("#active_requests tbody").html("");
 	update_progress_bar(callback);
 
@@ -327,7 +338,7 @@ function update_cached_data(callback){
 		});
  	}
 
-	for(i = 0; i < workTaskCategories.length; i++){
+	/*for(i = 0; i < workTaskCategories.length; i++){
  		category = workTaskCategories[i];
 
  		var workTaskContext = [category, $("<tr><th>Work Task Lookup for " + category +" </td><td class='status'><span class='glyphicon glyphicon-calendar'></span> Queued</td></td></tr>")];
@@ -360,6 +371,73 @@ function update_cached_data(callback){
 
 				// console.log(taskArray);
 				localStorage.setObject('workTasks', existingWorkTaskCache);
+				
+
+				updateSyncCounts();
+				this[1].find('td.status').html("<span class='glyphicon glyphicon-ok'></span> Done!");
+				this[1].delay(1000).fadeOut();
+				completedJobs++;
+				update_progress_bar(callback);
+			},
+			error: function(data){
+				// alert('Service call failed!');
+				// $(office_dropdown).removeClass('loading').html("<option disabled>Loading Failed!</option>");
+				if(data.status == 401){
+					// alert('Unauthorized! Your login may have expired. Please logout and log back in.')
+					// $("#quick_login_reason").text("Your login may have expired, please reenter your login details to continue");
+					// quickLogin();
+					this[1].find('td.status').html("<span class='glyphicon glyphicon-warning-sign'></span> Error! Please refresh login");
+				}
+				else{
+					// alert('Service call failed! Using cached values if available...');
+					this[1].find('td.status').html("<span class='glyphicon glyphicon-warning-sign'></span> Error!");
+				}
+			}
+		});
+ 	}*/
+
+	for(i = 0; i < trendCodeCategories.length; i++){
+ 		category = trendCodeCategories[i];
+
+ 		var trendCodeContext = [category, $("<tr><th>Trend Code Lookup for " + category +" </td><td class='status'><span class='glyphicon glyphicon-calendar'></span> Queued</td></td></tr>")];
+		trendCodeContext[1].appendTo("#active_requests tbody");
+
+		$.ajaxQueue("trendCodes",{
+
+			url: services.getSelectedL7Base() + "TrendCodesLookup",
+			type: 'POST',
+			headers: {
+				// "cache-control": "no-cache",
+				"Authorization" : "Bearer "+localStorage.oauthtoken,
+			},
+			data: JSON.stringify({ "type": trendCodeContext[0]}),
+			contentType: "application/json; charset=utf-8",
+			dataType: 'JSON',
+			context: trendCodeContext,
+			success: function(data){
+				
+				if(!existingTrendCodesCache)
+					existingTrendCodesCache = {};
+
+				function parseTasks(tasks) {
+					var response = [];
+					$.each(tasks, function(i,task) {
+						var parsedTask = {"TaskName" : task.text, "TaskCode": task.code, "TaskChildren": null};
+						if(task.children !== null)
+							parsedTask.TaskChildren = parseTasks(task.children);
+						response.push(parsedTask);
+					});
+					return response;
+				}
+				var taskArray = parseTasks(data.d);				
+				//$.each(data.d, function(i,task){
+				//	taskArray.push({"TaskName" : task.text, "TaskCode": task.code, "TaskChildren": task.children});
+				//});
+				existingTrendCodesCache[this[0]] = taskArray;
+
+
+				// console.log(taskArray);
+				localStorage.setObject('trendCodes', existingTrendCodesCache);
 				
 
 				updateSyncCounts();
